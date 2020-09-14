@@ -1,21 +1,27 @@
 import Vue from 'vue'
-import Router from 'vue-router'
-import Home from 'src/views/Home.vue'
-Vue.use(Router)
+import VueRouter from 'vue-router'
+import Home from '../views/Home.vue'
 
-export default new Router({
-    routes: [
-        {
-            path: '/',
-            component: Home,
-            name: 'Home'
-            // children: [
-            //     {
-            //         path: '/index',
-            //         name: 'Index',
-            //         component: () => import(/* webpackChunkName: "main" */ './views/brand/List.vue')
-            //     }
-            // ]
-        }
-    ]
+Vue.use(VueRouter)
+
+const routes = [
+    {
+        path: '/',
+        name: 'home',
+        component: Home,
+        redirect: '/rolePermissionMng'
+        // children: [
+        //     {
+        //         path: '/rolePermissionMng',
+        //         name: 'rolePermissionMng',
+        //         component: () => import(/* webpackChunkName: "about" */ '../views/comman/List.vue')
+        //     }
+        // ]
+    }
+]
+
+const router = new VueRouter({
+    routes
 })
+
+export default router
