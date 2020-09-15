@@ -156,17 +156,23 @@ export default {
                 this.$nextTick(() => (this.routerViewShow = true))
             }
         }
+
     }
 }
 </script>
 
-<style lang="less" scoped>
-
-.el-container {
-    height: 100%;
-    .el-aside {
-        background: #999;
-    }
+<style scoped lang="less">
+.header {
+    color: #666;
+    background-color: #23262E;
+    border-bottom: 1px solid #23262E;
+}
+.cont {
+    height: calc(100% - 60px);
+}
+.el-main {
+    padding-top: 10px;
+    background-color: #eee;
 }
 .header {
     color: #666;
