@@ -4,6 +4,7 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const program = require('commander')
+const webpack = require('webpack')
 
 require('colors')
 
@@ -27,19 +28,25 @@ function resolve (name) {
 
 const __webpackConfig__ = {
     // mode: 'development',
-    entry: './src/main.js',
+    entry: {
+        app: './src/main.js'
+    },
     output: {
-        path: resolve('dist')
+        path: resolve('dist'),
+        filename: IS_DEV ? 'js/[name].js' : 'js/[name].[contenthash:8].js',
+        publicPath: '/'
     },
     devServer: {
         contentBase: './dist',
         historyApiFallback: true,
         hot: true,
+        overlay: true,
         stats: 'errors-only'
     },
     resolve: {
+        extensions: ['.js', '.vue'],
         alias: {
-            src: resolve('src')
+            '@src': resolve('src')
         }
     },
     module: {
@@ -115,6 +122,9 @@ const __webpackConfig__ = {
         new MiniCssExtractPlugin({
             allChunks: true,
             filename: IS_DEV ? 'css/[name].css' : 'css/[name].[contenthash:8].css'
+        }),
+        new webpack.DefinePlugin({
+            'process.env': JSON.stringify(__enviroment__)
         })
     ]
 }
