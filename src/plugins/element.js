@@ -12,7 +12,18 @@ import {
     Submenu,
     Dropdown,
     DropdownMenu,
-    DropdownItem
+    DropdownItem,
+    Form,
+    FormItem,
+    Input,
+    Select,
+    Option,
+    ButtonGroup,
+    Table,
+    TableColumn,
+    Dialog,
+    Pagination,
+    Loading
 } from 'element-ui'
 
 // Vue.prototype.$ELEMENT = { size: 'small', zIndex: 3000 }
@@ -30,3 +41,14 @@ Vue.use(Submenu)
 Vue.use(Dropdown)
 Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
+Vue.use(Form)
+Vue.use(FormItem)
+Vue.use(Input)
+Vue.use(Select)
+Vue.use(Option)
+Vue.use(ButtonGroup)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(Dialog)
+Vue.use(Pagination)
+Vue.use(Loading.directive)

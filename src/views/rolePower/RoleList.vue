@@ -118,7 +118,7 @@ export default {
                 pageSize: 10
             },
             total: 0,
-            loading: true,
+            loading: false,
             groupVisible: false,
             roleAddVisible: false,
             addGroupRole: { name: '' },
@@ -135,7 +135,7 @@ export default {
     },
     methods: {
         getRoleList () {
-            this.loading = true
+            // this.loading = true
             this.$ajax({
                 type: 'getRoleList',
                 method: 'POST',
