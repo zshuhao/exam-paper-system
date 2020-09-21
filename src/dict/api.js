@@ -42,6 +42,22 @@ const api = {
     getTemplate: { // 获取下载导入模版
         url: '/orderCenter/invoiceUpLoad/downLoadInvoiceTemplate',
         needLogin: true
+    },
+    queryRolePage: {
+        url: '/perm/role/queryRolePage',
+        needLogin: true
+    },
+    queryRoleGroupList: {
+        url: '/perm/role/queryRoleGroupList',
+        needLogin: true
+    },
+    addRoleGroup: {
+        url: '/perm/role/addRoleGroup',
+        needLogin: true
+    },
+    deleteRoleGroup: {
+        url: '/perm/role/deleteRoleGroup',
+        needLogin: true
     }
 }
 export default api

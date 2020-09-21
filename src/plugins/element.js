@@ -23,6 +23,7 @@ import {
     TableColumn,
     Dialog,
     Pagination,
+    MessageBox,
     Loading
 } from 'element-ui'
 
@@ -52,3 +53,8 @@ Vue.use(TableColumn)
 Vue.use(Dialog)
 Vue.use(Pagination)
 Vue.use(Loading.directive)
+
+Vue.prototype.$msgbox = MessageBox
+Vue.prototype.$alert = MessageBox.alert
+Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$prompt = MessageBox.prompt

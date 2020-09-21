@@ -39,25 +39,15 @@
           <div>
             <el-form :inline="true" ref="form" :model="addRole" size="mini">
               <el-form-item prop="name">
-                <el-input v-model="addRole.name" placeholder="请输入"></el-input>
+                <el-input v-model="addRole.name" placeholder="请输入名称"></el-input>
+              </el-form-item>
+              <el-form-item prop="name">
+                <el-input v-model="addRole.description" placeholder="请输入描述"></el-input>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="addGroup">添加</el-button>
+                <el-button type="primary" @click="addRoleMethod">添加</el-button>
               </el-form-item>
             </el-form>
-            <ul class="group-list">
-              <li class="item">
-                <i class="icon el-icon-folder"></i>
-                <span class="item-name">默认分组</span>
-              </li>
-              <template v-for="item in groupOptions">
-                <li class="item" :key="item.id">
-                  <i class="icon el-icon-folder"></i>
-                  <span class="item-name">{{item.name}}</span>
-                  <el-button class="dele-btn" type="text" @click="deleGroup(item.id)">删除</el-button>
-                </li>
-              </template>
-            </ul>
           </div>
           <span slot="footer" class="dialog-footer">
                     <el-button type="primary" @click="groupVisible = false">关闭</el-button>
@@ -67,8 +57,8 @@
         <el-dialog title="分组管理" :visible.sync="groupVisible" width="500px">
           <div>
             <el-form :inline="true" ref="form" :model="addGroupRole" :rules="formRules" size="mini">
-              <el-form-item prop="name">
-                <el-input v-model="addGroupRole.name" placeholder="请输入"></el-input>
+              <el-form-item prop="groupName">
+                <el-input v-model="addGroupRole.groupName" placeholder="请输入"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="addGroup">添加</el-button>
@@ -82,7 +72,7 @@
               <template v-for="item in groupOptions">
                 <li class="item" :key="item.id">
                   <i class="icon el-icon-folder"></i>
-                  <span class="item-name">{{item.name}}</span>
+                  <span class="item-name">{{item.groupName}}</span>
                   <el-button class="dele-btn" type="text" @click="deleGroup(item.id)">删除</el-button>
                 </li>
               </template>
@@ -121,10 +111,10 @@ export default {
             loading: false,
             groupVisible: false,
             roleAddVisible: false,
-            addGroupRole: { name: '' },
+            addGroupRole: { groupName: '' },
             addRole: { name: '', description: '' },
             formRules: {
-                name: [{ required: true, message: '请输入分组名称', trigger: 'blur' }]
+                groupName: [{ required: true, message: '请输入分组名称', trigger: 'blur' }]
             },
             groupOptions: []
         }
@@ -137,15 +127,15 @@ export default {
         getRoleList () {
             // this.loading = true
             this.$ajax({
-                type: 'getRoleList',
+                type: 'queryRolePage',
                 method: 'POST',
                 data: this.params
             }).then(res => {
                 if (res.data.success) {
-                    const { dynamicFormList, recordCount } = res.data.data
+                    const { roleList, recordCount } = res.data.data
                     this.total = recordCount
-                    this.tableList = (dynamicFormList || []).map(item => {
-                        return item.formGroupId === 0 ? { ...item, formGroupName: '默认分组' } : item
+                    this.tableList = (roleList || []).map(item => {
+                        return item.roleGroupId === null ? { ...item, roleGroupName: '默认分组' } : item
                     })
                 }
                 this.loading = false
@@ -153,7 +143,7 @@ export default {
         },
         fetchGroupList () {
             this.$ajax({
-                type: 'fetchGroupList',
+                type: 'queryRoleGroupList',
                 method: 'POST'
             }).then(res => {
                 console.log(res)
@@ -162,13 +152,31 @@ export default {
                 }
             })
         },
+        addRoleMethod () {
+            this.$refs.form.validate((valid) => {
+                if (valid) {
+                    this.$ajax({
+                        type: 'addRole',
+                        data: {
+                            name: this.addRole.name,
+                            description: this.addRole.description
+                        }
+                    }).then(res => {
+                        if (res.data.success) {
+                            this.$message.success('添加成功！')
+                            this.getRoleList()
+                        }
+                    })
+                }
+            })
+        },
         addGroup () {
             this.$refs.form.validate((valid) => {
                 if (valid) {
                     this.$ajax({
-                        type: 'addGroup',
+                        type: 'addRoleGroup',
                         data: {
-                            name: this.addGroupRole.name
+                            groupName: this.addGroupRole.groupName
                         }
                     }).then(res => {
                         if (res.data.success) {
@@ -187,7 +195,7 @@ export default {
             }).then(() => {
                 const roleGroupId = id
                 this.$ajax({
-                    type: 'deleteGroup',
+                    type: 'deleteRoleGroup',
                     method: 'POST',
                     data: { roleGroupId }
                 }).then(res => {
