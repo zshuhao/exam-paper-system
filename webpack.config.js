@@ -27,7 +27,8 @@ function resolve (name) {
 }
 
 const __webpackConfig__ = {
-    // mode: 'development',
+    mode: 'production',
+    devtool: false,
     entry: {
         app: './src/main.js'
     },
@@ -41,7 +42,8 @@ const __webpackConfig__ = {
         historyApiFallback: true,
         hot: true,
         overlay: true,
-        stats: 'errors-only'
+        stats: 'errors-only',
+        port: 8085
     },
     resolve: {
         extensions: ['.js', '.vue'],
@@ -128,5 +130,10 @@ const __webpackConfig__ = {
         })
     ]
 }
+
+if (IS_DEV) {
+    __webpackConfig__.mode = 'development'
+    __webpackConfig__.devtool = 'cheap-module-eval-source-map'
+} else {}
 
 module.exports = __webpackConfig__
