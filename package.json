@@ -6,7 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack-dev-server --env=dev",
-    "build": "webpack --env=prod"
+    "build": "webpack --env=prod",
+    "build:aliyun_prod": "webpack --env=prod",
+    "build:prod": "webpack --env=prod",
+    "build:test": "webpack --env=prod"
   },
   "author": "",
   "license": "ISC",
