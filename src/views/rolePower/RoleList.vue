@@ -23,16 +23,16 @@
       </el-form>
 
       <mw-table class="table" :data="tableList" v-loading="loading">
+        <el-table-column prop="id" label="序号" align="center"></el-table-column>
+        <el-table-column prop="name" label="角色名称" align="center"></el-table-column>
+        <el-table-column prop="roleGroupName" label="角色组" align="center"></el-table-column>
+        <el-table-column prop="description" label="描述" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button type="text" @click="handleDelete(scope.row)">删除</el-button>
             <el-button type="text" @click="handleEdit(scope.row)">编辑</el-button>
           </template>
         </el-table-column>
-        <el-table-column prop="id" label="序号" align="center"></el-table-column>
-        <el-table-column prop="name" label="角色名称" align="center"></el-table-column>
-        <el-table-column prop="roleGroupName" label="角色组" align="center"></el-table-column>
-        <el-table-column prop="description" label="描述" align="center"></el-table-column>
       </mw-table>
 
         <el-dialog title="角色管理" :visible.sync="roleAddVisible" width="500px">
