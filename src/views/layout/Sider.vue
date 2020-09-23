@@ -10,6 +10,10 @@
                     <i class="el-icon-notebook-2"></i>
                     <span slot="title">角色权限管理</span>
                 </el-menu-item>
+                <el-menu-item index="/systemPower">
+                    <i class="el-icon-notebook-2"></i>
+                    <span slot="title">系统权限管理</span>
+                </el-menu-item>
             </template>
 
             <template v-else v-for="item in sideMenu">

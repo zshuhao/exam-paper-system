@@ -14,6 +14,11 @@ export default new Router({
                     path: '/rolePower',
                     name: 'RolePower',
                     component: () => import(/* webpackChunkName: "main" */ '@src/views/rolePower/RoleList.vue')
+                },
+                {
+                    path: '/systemPower',
+                    name: 'SystemPower',
+                    component: () => import(/* webpackChunkName: "main" */ '@src/views/systemPower/SystemPower.vue')
                 }
             ]
         }

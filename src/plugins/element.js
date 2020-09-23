@@ -28,7 +28,7 @@ import {
     Loading
 } from 'element-ui'
 
-// Vue.prototype.$ELEMENT = { size: 'small', zIndex: 3000 }
+Vue.prototype.$ELEMENT = { size: 'small' }
 
 Vue.use(Button)
 Vue.use(Container)
