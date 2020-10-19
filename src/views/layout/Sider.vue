@@ -1,22 +1,12 @@
 <template>
     <el-aside class="sider">
          <el-menu class="menu" :router="true" :default-active="dafaultRouterIndex"
-            text-color="rgba(255,255,255,.7)"
-            background-color="#393D49"
-            active-text-color="#fff"
+            :background-color="variable.menuBg"
+            :text-color="variable.menuText"
+            :active-text-color="variable.menuActiveText"
             @select="selected">
-            <template v-if="env === 'dev'">
-                <el-menu-item index="/rolePower">
-                    <i class="el-icon-notebook-2"></i>
-                    <span slot="title">角色权限管理</span>
-                </el-menu-item>
-                <el-menu-item index="/systemPower">
-                    <i class="el-icon-notebook-2"></i>
-                    <span slot="title">系统权限管理</span>
-                </el-menu-item>
-            </template>
 
-            <template v-else v-for="item in sideMenu">
+            <template v-for="item in sideMenu">
                 <el-submenu v-if="item.children" :index="item.path" :key="item.id">
                     <template slot="title">
                         <i class="el-icon-folder-opened"></i>
@@ -32,11 +22,13 @@
                     <span slot="title">{{item.name}}</span>
                 </el-menu-item>
             </template>
+
         </el-menu>
     </el-aside>
 </template>
 
 <script>
+import variable from '../../less/variable.less'
 import { formatTree } from '@src/utils/tool'
 const env = process.env
 export default {
@@ -48,6 +40,9 @@ export default {
         }
     },
     computed: {
+        variable () {
+            return variable
+        },
         sideMenu () {
             let menu = this.$store.state.userInfo.permissionList || []
             let pid = ''
@@ -71,6 +66,9 @@ export default {
                 : `${route.path}?no=${route.query.no}`
         }
     },
+    mounted () {
+        console.log(variable)
+    },
     methods: {
         selected (index) {
             this.$emit('selected', index)
@@ -83,7 +81,7 @@ export default {
 
 .sider {
     width: 201px !important;
-    background-color: #ffffff;
+    // background-color: #ffffff;
     .menu {
         height: 100%;
         .icon {
@@ -97,30 +95,30 @@ export default {
 // }
 
 // 修改侧边导航的默认样式
-.menu:not(.el-menu--collapse) {
-    width: 200px;
-}
+// .menu:not(.el-menu--collapse) {
+//     width: 200px;
+// }
 
-.menu /deep/ .el-submenu__title {
-    height: 42px;
-    line-height: 42px;
-}
+// .menu /deep/ .el-submenu__title {
+//     height: 42px;
+//     line-height: 42px;
+// }
 
-.menu /deep/ .el-menu {
-   background-color: rgba(0,0,0,.3);
-}
+// .menu /deep/ .el-menu {
+//    background-color: rgba(0,0,0,.3);
+// }
 
-.menu /deep/ .el-menu-item {
-    height: 39px;
-    line-height: 39px;
-}
+// .menu /deep/ .el-menu-item {
+//     height: 39px;
+//     line-height: 39px;
+// }
 
-.menu  /deep/ .el-submenu {
-    background-color: rgba(0, 0, 0, 0) !important;
-}
+// .menu  /deep/ .el-submenu {
+//     background-color: rgba(0, 0, 0, 0) !important;
+// }
 
-.menu  /deep/ .is-active {
-    background-color: #009688 !important;
-    // color: #fff;
-}
+// .menu  /deep/ .is-active {
+//     background-color: #009688 !important;
+//     // color: #fff;
+// }
 </style>
