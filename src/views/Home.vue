@@ -1,12 +1,12 @@
 <template>
     <el-container>
-        <Sider class="sider" @selected="selected" />
+        <Sider @selected="selected" />
         <el-container class="cont">
             <el-header class="header">
                 <Header @loginOut="loginOut" />
             </el-header>
             <el-main>
-                <router-view v-if="pageVisible && routerViewShow"></router-view>
+                <router-view></router-view>
             </el-main>
         </el-container>
     </el-container>
@@ -22,15 +22,15 @@ export default {
     data () {
         return {
             routerViewShow: true,
-            pageVisible: false
+            pageVisible: true
         }
     },
     async created () {
-       
+
     },
     methods: {
         fetchToken (token) {
-            
+
         },
 
         fetchUserInfo () {
@@ -117,11 +117,12 @@ export default {
 </script>
 
 <style scoped lang="less">
-// .header {
-//     color: #666;
-//     background-color: #23262E;
-//     border-bottom: 1px solid #23262E;
-// }
+.header {
+    padding: 0;
+    // color: #666;
+    // background-color: #23262E;
+    // border-bottom: 1px solid #23262E;
+}
 // .cont {
 //     height: calc(100% - 60px);
 // }

@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import cart from './modules/cart'
-
+import app from './modules/app'
+import getters from './getters'
 Vue.use(Vuex)
 
 const state = () => ({
@@ -10,21 +11,9 @@ const state = () => ({
     menus: [],
     userInfo: {}
 })
-const getters = {
-    getToken (state) {
-        return state.token
-    },
-    getKtToken (state) {
-        return state.ktToken
-    },
-    getMenus (state) {
-        return state.menus
-    },
-    getUserInfo (state) {
-        return state.userInfo
-    }
-}
+
 const actions = {
+    // tag
     setKtToken ({ commit }, payload) {
         commit('setKtToken', payload)
     },
@@ -55,7 +44,8 @@ const mutations = {
 
 export default new Vuex.Store({
     modules: {
-        cart
+        cart,
+        app
     },
     state,
     getters,

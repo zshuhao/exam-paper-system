@@ -9,7 +9,8 @@
     "build": "webpack --env=prod",
     "build:aliyun_prod": "webpack --env=prod",
     "build:prod": "webpack --env=prod",
-    "build:test": "webpack --env=prod"
+    "build:test": "webpack --env=prod",
+    "build:dev": "webpack --env=dev"
   },
   "author": "",
   "license": "ISC",

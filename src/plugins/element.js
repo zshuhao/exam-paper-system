@@ -25,7 +25,9 @@ import {
     Pagination,
     MessageBox,
     Message,
-    Loading
+    Loading,
+    Breadcrumb,
+    BreadcrumbItem
 } from 'element-ui'
 
 Vue.prototype.$ELEMENT = { size: 'small' }
@@ -54,6 +56,8 @@ Vue.use(TableColumn)
 Vue.use(Dialog)
 Vue.use(Pagination)
 Vue.use(Loading.directive)
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
 
 Vue.prototype.$msgbox = MessageBox
 Vue.prototype.$alert = MessageBox.alert

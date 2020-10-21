@@ -83,17 +83,20 @@ const __webpackConfig__ = {
                     {
                         loader: MiniCssExtractPlugin.loader,
                         options: {
-                            hmr: IS_DEV,
-                            modules: true
+                            hmr: IS_DEV
                         }
                     },
-                    'css-loader',
-                    // {
-                    //     loader: 'css-loader',
-                    //     options: {
-                    //         modules: true
-                    //     }
-                    // },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            importLoaders: 2,
+                            modules: {
+                                // localIdentName: '[name]'
+                                localIdentName: '[local]'
+                                // localIdentName: '[name]_[local]_[hash:base64:5]'
+                            }
+                        }
+                    },
                     'less-loader'
                 ]
             },

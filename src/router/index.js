@@ -11,14 +11,14 @@ export default new Router({
             name: 'Home',
             children: [
                 {
-                    path: '/rolePower',
-                    name: 'RolePower',
-                    component: () => import(/* webpackChunkName: "main" */ '@src/views/rolePower/RoleList.vue')
+                    path: '/test1',
+                    name: 'Test1',
+                    component: () => import(/* webpackChunkName: "main" */ '@src/views/test1.vue')
                 },
                 {
-                    path: '/systemPower',
-                    name: 'SystemPower',
-                    component: () => import(/* webpackChunkName: "main" */ '@src/views/systemPower/SystemPower.vue')
+                    path: '/test2',
+                    name: 'Test2',
+                    component: () => import(/* webpackChunkName: "main" */ '@src/views/test2.vue')
                 }
             ]
         }

@@ -1,35 +1,41 @@
 <template>
-    <el-aside class="sider">
-         <el-menu class="menu" :router="true" :default-active="dafaultRouterIndex"
-            :background-color="variable.menuBg"
-            :text-color="variable.menuText"
-            :active-text-color="variable.menuActiveText"
-            @select="selected">
+    <el-menu
+        class="menu"
+        :default-active="dafaultRouterIndex"
+        :collapse="isCollapse"
+        :background-color="variable.menuBg"
+        :text-color="variable.menuText"
+        :active-text-color="variable.menuActiveText"
+        :collapse-transition="true"
+        :router="true"
+        @select="selected">
 
-            <template v-for="item in sideMenu">
-                <el-submenu v-if="item.children" :index="item.path" :key="item.id">
-                    <template slot="title">
-                        <i class="el-icon-folder-opened"></i>
-                        <span>{{item.name}}</span>
-                    </template>
-                    <el-menu-item v-for="i in item.children" :index="i.path" :key="i.id">
-                        <i class="el-icon-notebook-2"></i>
-                        <span slot="title">{{i.name}}</span>
-                    </el-menu-item>
-                </el-submenu>
-                <el-menu-item v-else :index="item.path" :key="item.id">
-                    <i class="el-icon-notebook-2"></i>
-                    <span slot="title">{{item.name}}</span>
-                </el-menu-item>
+        <el-submenu index="1">
+            <template slot="title">
+                <i class="el-icon-folder-opened"></i>
+                <span>阿斯顿发</span>
             </template>
+            <el-menu-item index="/test1">
+                <i class="el-icon-notebook-2"></i>
+                <span slot="title">发烧吧</span>
+            </el-menu-item>
+            <el-menu-item index="/test2">
+                <i class="el-icon-notebook-2"></i>
+                <span slot="title">订单</span>
+            </el-menu-item>
+        </el-submenu>
+        <el-menu-item index="2">
+            <i class="el-icon-notebook-2"></i>
+            <span slot="title">发送到</span>
+        </el-menu-item>
 
-        </el-menu>
-    </el-aside>
+    </el-menu>
 </template>
 
 <script>
 import variable from '../../less/variable.less'
 import { formatTree } from '@src/utils/tool'
+import { mapGetters } from 'vuex'
 const env = process.env
 export default {
     name: 'Sider',
@@ -40,6 +46,12 @@ export default {
         }
     },
     computed: {
+        ...mapGetters([
+            'sidebar'
+        ]),
+        isCollapse () {
+            return !this.sidebar
+        },
         variable () {
             return variable
         },
@@ -79,46 +91,24 @@ export default {
 
 <style lang="less" scoped>
 
-.sider {
-    width: 201px !important;
-    // background-color: #ffffff;
-    .menu {
-        height: 100%;
-        .icon {
-            font-size: 16px;
-        }
-    }
+// .sider {
+//     width: 210px !important;
+//     transition: width 0.28s;
+//     .menu {
+//         height: 100%;
+//         // .icon {
+//         //     font-size: 16px;
+//         // }
+//     }
+// }
+// .hideSidebar {
+//     width: 65px !important;
+// }
+.menu:not(.el-menu--collapse) {
+    width: 200px;
+}
+.menu  /deep/ .el-submenu .el-menu-item {
+    background-color: #1f2d3d !important;
 }
 
-// .el-menu {
-//     background-color: #393D49;
-// }
-
-// 修改侧边导航的默认样式
-// .menu:not(.el-menu--collapse) {
-//     width: 200px;
-// }
-
-// .menu /deep/ .el-submenu__title {
-//     height: 42px;
-//     line-height: 42px;
-// }
-
-// .menu /deep/ .el-menu {
-//    background-color: rgba(0,0,0,.3);
-// }
-
-// .menu /deep/ .el-menu-item {
-//     height: 39px;
-//     line-height: 39px;
-// }
-
-// .menu  /deep/ .el-submenu {
-//     background-color: rgba(0, 0, 0, 0) !important;
-// }
-
-// .menu  /deep/ .is-active {
-//     background-color: #009688 !important;
-//     // color: #fff;
-// }
 </style>
