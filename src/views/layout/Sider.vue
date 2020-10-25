@@ -10,25 +10,22 @@
         :router="true"
         @select="selected">
 
-        <el-submenu index="1">
-            <template slot="title">
-                <i class="el-icon-folder-opened"></i>
-                <span>阿斯顿发</span>
-            </template>
-            <el-menu-item index="/test1">
-                <i class="el-icon-notebook-2"></i>
-                <span slot="title">发烧吧</span>
+        <template v-for="item in routeList">
+            <el-submenu v-if="item.children && item.children.length > 0" index="1" :key="item.id">
+                <template slot="title">
+                    <i :class="item.icon"></i>
+                    <span>{{ item.name }}</span>
+                </template>
+                <el-menu-item v-for="child in item.children" :key="child.id" :index="child.path">
+                    <i :class="item.icon"></i>
+                    <span slot="title">{{ item.name }}</span>
+                </el-menu-item>
+            </el-submenu>
+            <el-menu-item v-else :key="item.id" :index="item.path">
+                <i :class="item.icon"></i>
+                <span slot="title">{{ item.name }}</span>
             </el-menu-item>
-            <el-menu-item index="/test2">
-                <i class="el-icon-notebook-2"></i>
-                <span slot="title">订单</span>
-            </el-menu-item>
-        </el-submenu>
-        <el-menu-item index="2">
-            <i class="el-icon-notebook-2"></i>
-            <span slot="title">发送到</span>
-        </el-menu-item>
-
+        </template>
     </el-menu>
 </template>
 
@@ -42,7 +39,45 @@ export default {
     data () {
         return {
             env,
-            dafaultIndex: ''
+            dafaultIndex: '',
+            routeList: [
+                {
+                    id: '1',
+                    icon: 'el-icon-notebook-2',
+                    path: '/',
+                    name: '首页'
+                },
+                {
+                    id: '2',
+                    icon: 'el-icon-notebook-2',
+                    path: '/department',
+                    name: '院系管理'
+                },
+                {
+                    id: '3',
+                    icon: 'el-icon-notebook-2',
+                    path: '/profession',
+                    name: '专业管理'
+                },
+                {
+                    id: '4',
+                    icon: 'el-icon-notebook-2',
+                    path: '/course',
+                    name: '科目管理'
+                },
+                {
+                    id: '5',
+                    icon: 'el-icon-notebook-2',
+                    path: '/exam',
+                    name: '试卷管理'
+                },
+                {
+                    id: '6',
+                    icon: 'el-icon-notebook-2',
+                    path: '/questionBank',
+                    name: '题库管理'
+                }
+            ]
         }
     },
     computed: {
