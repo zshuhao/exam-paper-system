@@ -1,11 +1,11 @@
 <template>
-    <div>Profession</div>
+    <div>Exam</div>
 </template>
 
 <script>
 // import {} from ''
 export default {
-    name: 'Profession',
+    name: 'Exam',
     data () {
         return {
         }
