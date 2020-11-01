@@ -1,5 +1,12 @@
 <template>
-    <el-container>
+    <div :class="classObj" class="app-container">
+        <Sider></Sider>
+        <div class="main-container">
+            <Header></Header>
+            <AppMain></AppMain>
+        </div>
+    </div>
+    <!-- <el-container>
         <Sider @selected="selected" />
         <el-container class="cont">
             <el-header class="header">
@@ -11,20 +18,34 @@
                 </transition>
             </el-main>
         </el-container>
-    </el-container>
+    </el-container> -->
 </template>
 
 <script>
-import Header from './layout/Header'
-import Sider from './layout/Sider'
-
+import Header from './Header'
+import Sider from './Sider'
+import AppMain from './AppMain'
+import { mapGetters } from 'vuex'
 export default {
     name: 'Home',
-    components: { Header, Sider },
+    components: { Header, Sider, AppMain },
     data () {
         return {
             routerViewShow: true,
             pageVisible: true
+        }
+    },
+    computed: {
+        ...mapGetters([
+            'sidebar'
+        ]),
+        classObj () {
+            return {
+                hideSidebar: !this.sidebar,
+                openSidebar: this.sidebar
+                // withoutAnimation: this.sidebar.withoutAnimation,
+                // mobile: this.device === 'mobile'
+            }
         }
     },
     async created () {
@@ -49,7 +70,7 @@ export default {
         // 重新获取ktToken
         fetchKtToken (cbPath) {
             const env = process.env
-            const config = require(`../../config/app.${env}.json`)
+            const config = require(`../../../config/app.${env}.json`)
             const cbUrl = encodeURIComponent(config.back)
             window.location.href = `${config.ktApi}/auth/redirectUrl?callback_url=${cbUrl}${cbPath}`
         },
@@ -94,7 +115,7 @@ export default {
         loginOut () {
             const token = this.$store.getters.getAccessToken
             const env = process.env
-            const config = require(`../../config/app.${env}.json`)
+            const config = require(`../../../config/app.${env}.json`)
             const url = `${config.ktApi}/auth/logout?access_token=${token}&redirect_uri=` + encodeURIComponent(`${config.ktApi}/auth/callback`)
 
             this.$store.dispatch('setToken', {})
@@ -119,6 +140,19 @@ export default {
 </script>
 
 <style scoped lang="less">
+.app-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.main-container {
+    min-height: 100%;
+    transition: margin-left 0.28s;
+    margin-left: 210px;
+    position: relative;
+}
+
 .header {
     padding: 0;
     // color: #666;
@@ -161,3 +195,11 @@ export default {
   transform: translateX(30px);
 }
 </style>
+
+// <style lang="less">
+// .hideSidebar {
+//     .sider-container {
+//         width: 54px !important;
+//     }
+// }
+// </style>
