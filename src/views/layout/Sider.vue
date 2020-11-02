@@ -29,34 +29,6 @@
             </template>
         </el-menu>
     </div>
-    <!-- <el-menu
-        class="menu"
-        :default-active="dafaultRouterIndex"
-        :collapse="isCollapse"
-        :background-color="variable.menuBg"
-        :text-color="variable.menuText"
-        :active-text-color="variable.menuActiveText"
-        :collapse-transition="true"
-        :router="true"
-        @select="selected">
-
-        <template v-for="item in routeList">
-            <el-submenu v-if="item.children && item.children.length > 0" index="1" :key="item.id">
-                <template slot="title">
-                    <i :class="item.icon"></i>
-                    <span>{{ item.name }}</span>
-                </template>
-                <el-menu-item v-for="child in item.children" :key="child.id" :index="child.path">
-                    <i :class="item.icon"></i>
-                    <span slot="title">{{ item.name }}</span>
-                </el-menu-item>
-            </el-submenu>
-            <el-menu-item v-else :key="item.id" :index="item.path">
-                <i :class="item.icon"></i>
-                <span slot="title">{{ item.name }}</span>
-            </el-menu-item>
-        </template>
-    </el-menu> -->
 </template>
 
 <script>
@@ -167,20 +139,10 @@ export default {
     left: 0;
     z-index: 1001;
     overflow: hidden;
+    .menu {
+        border: none;
+    }
 }
-// .sider {
-//     width: 210px !important;
-//     transition: width 0.28s;
-//     .menu {
-//         height: 100%;
-//         // .icon {
-//         //     font-size: 16px;
-//         // }
-//     }
-// }
-// .hideSidebar {
-//     width: 65px !important;
-// }
 .menu:not(.el-menu--collapse) {
     width: 210px;
 }

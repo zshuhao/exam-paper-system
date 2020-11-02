@@ -6,19 +6,6 @@
             <AppMain></AppMain>
         </div>
     </div>
-    <!-- <el-container>
-        <Sider @selected="selected" />
-        <el-container class="cont">
-            <el-header class="header">
-                <Header @loginOut="loginOut" />
-            </el-header>
-            <el-main>
-                <transition name="fade-transform" mode="out-in">
-                    <router-view></router-view>
-                </transition>
-            </el-main>
-        </el-container>
-    </el-container> -->
 </template>
 
 <script>
@@ -153,53 +140,4 @@ export default {
     position: relative;
 }
 
-.header {
-    padding: 0;
-    // color: #666;
-    // background-color: #23262E;
-    // border-bottom: 1px solid #23262E;
-}
-// .cont {
-//     height: calc(100% - 60px);
-// }
-// .el-main {
-//     padding-top: 10px;
-//     background-color: #eee;
-// }
-// .header {
-//     color: #666;
-//     background-color: #23262E;
-//     border-bottom: 1px solid #23262E;
-// }
-// .cont {
-//     height: calc(100% - 60px);
-// }
-.el-main {
-    overflow-x: hidden;
-    // padding-top: 10px;
-    // background-color: #eee;
-}
-/* fade-transform */
-.fade-transform-leave-active,
-.fade-transform-enter-active {
-  transition: all .5s;
-}
-
-.fade-transform-enter {
-  opacity: 0;
-  transform: translateX(-30px);
-}
-
-.fade-transform-leave-to {
-  opacity: 0;
-  transform: translateX(30px);
-}
 </style>
-
-// <style lang="less">
-// .hideSidebar {
-//     .sider-container {
-//         width: 54px !important;
-//     }
-// }
-// </style>

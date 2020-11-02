@@ -10,7 +10,7 @@
 </template>
 
 <script>
-// import {} from ''
+
 export default {
     name: 'Breadcrumb',
     data () {
