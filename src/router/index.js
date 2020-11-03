@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@src/views/layout/Index.vue'
+import Home from '@/views/layout/Index.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -16,7 +16,7 @@ export default new Router({
                     meta: {
                         title: '院系管理'
                     },
-                    component: () => import(/* webpackChunkName: "main" */ '@src/views/Department.vue')
+                    component: () => import(/* webpackChunkName: "main" */ '@/views/Department.vue')
                 },
                 {
                     path: '/profession',
@@ -24,7 +24,7 @@ export default new Router({
                     meta: {
                         title: '专业管理'
                     },
-                    component: () => import(/* webpackChunkName: "main" */ '@src/views/Profession.vue')
+                    component: () => import(/* webpackChunkName: "main" */ '@/views/Profession.vue')
                 },
                 {
                     path: '/course',
@@ -32,7 +32,7 @@ export default new Router({
                     meta: {
                         title: '科目管理'
                     },
-                    component: () => import(/* webpackChunkName: "main" */ '@src/views/Course.vue')
+                    component: () => import(/* webpackChunkName: "main" */ '@/views/Course.vue')
                 },
                 {
                     path: '/exam',
@@ -40,7 +40,7 @@ export default new Router({
                     meta: {
                         title: '试卷管理'
                     },
-                    component: () => import(/* webpackChunkName: "main" */ '@src/views/Exam.vue')
+                    component: () => import(/* webpackChunkName: "main" */ '@/views/Exam.vue')
                 },
                 {
                     path: '/questionBank',
@@ -48,12 +48,12 @@ export default new Router({
                     meta: {
                         title: '题库管理'
                     },
-                    component: () => import(/* webpackChunkName: "main" */ '@src/views/QuestionBank.vue')
+                    component: () => import(/* webpackChunkName: "main" */ '@/views/QuestionBank.vue')
                 }
                 // {
                 //     path: '/test2',
                 //     name: 'Test2',
-                //     component: () => import(/* webpackChunkName: "main" */ '@src/views/test2.vue')
+                //     component: () => import(/* webpackChunkName: "main" */ '@/views/test2.vue')
                 // }
             ]
         }

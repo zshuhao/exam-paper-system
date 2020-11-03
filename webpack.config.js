@@ -48,7 +48,7 @@ const __webpackConfig__ = {
     resolve: {
         extensions: ['.js', '.vue'],
         alias: {
-            '@src': resolve('src')
+            '@': resolve('src')
         }
     },
     module: {

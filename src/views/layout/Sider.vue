@@ -33,7 +33,7 @@
 
 <script>
 import variable from '../../less/variable.less'
-import { formatTree } from '@src/utils/tool'
+import { formatTree } from '@/utils/tool'
 import { mapGetters } from 'vuex'
 const env = process.env
 export default {
