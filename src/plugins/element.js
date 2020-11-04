@@ -30,7 +30,7 @@ import {
     BreadcrumbItem
 } from 'element-ui'
 
-Vue.prototype.$ELEMENT = { size: 'small' }
+// Vue.prototype.$ELEMENT = { size: 'small' }
 
 Vue.use(Button)
 Vue.use(Container)

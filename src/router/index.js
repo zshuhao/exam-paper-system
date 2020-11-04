@@ -56,6 +56,11 @@ export default new Router({
                 //     component: () => import(/* webpackChunkName: "main" */ '@/views/test2.vue')
                 // }
             ]
+        },
+        {
+            path: '/login',
+            component: () => import(/* webpackChunkName: "main" */ '@/views/Login.vue'),
+            name: 'Login'
         }
     ]
 })
