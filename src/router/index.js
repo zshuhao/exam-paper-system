@@ -6,10 +6,18 @@ Vue.use(Router)
 export default new Router({
     routes: [
         {
-            path: '/dashboard',
+            path: '/',
             component: Home,
             name: 'Home',
             children: [
+                {
+                    path: '/dashboard',
+                    name: 'Dashboard',
+                    // meta: {
+                    //     title: '院系管理'
+                    // },
+                    component: () => import(/* webpackChunkName: "main" */ '@/views/Dashboard.vue')
+                },
                 {
                     path: '/department',
                     name: 'Department',
@@ -50,11 +58,33 @@ export default new Router({
                     },
                     component: () => import(/* webpackChunkName: "main" */ '@/views/QuestionBank.vue')
                 }
-                // {
-                //     path: '/test2',
-                //     name: 'Test2',
-                //     component: () => import(/* webpackChunkName: "main" */ '@/views/test2.vue')
-                // }
+            ]
+        },
+        {
+            path: '/system',
+            component: Home,
+            redirect: '/system/users',
+            name: 'System',
+            meta: {
+                title: '系统管理'
+            },
+            children: [
+                {
+                    path: '/system/users',
+                    name: 'Users',
+                    meta: {
+                        title: '人员管理'
+                    },
+                    component: () => import(/* webpackChunkName: "main" */ '@/views/system/Users.vue')
+                },
+                {
+                    path: '/system/roles',
+                    name: 'Roles',
+                    meta: {
+                        title: '角色管理'
+                    },
+                    component: () => import(/* webpackChunkName: "main" */ '@/views/system/Roles.vue')
+                }
             ]
         },
         {

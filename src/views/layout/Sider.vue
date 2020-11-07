@@ -18,8 +18,8 @@
                         <span>{{ item.name }}</span>
                     </template>
                     <el-menu-item v-for="child in item.children" :key="child.id" :index="child.path">
-                        <i :class="item.icon"></i>
-                        <span slot="title">{{ item.name }}</span>
+                        <i :class="child.icon"></i>
+                        <span slot="title">{{ child.name }}</span>
                     </el-menu-item>
                 </el-submenu>
                 <el-menu-item v-else :key="item.id" :index="item.path">
