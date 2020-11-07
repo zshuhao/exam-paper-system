@@ -3,41 +3,33 @@ import Vuex from 'vuex'
 import cart from './modules/cart'
 import app from './modules/app'
 import getters from './getters'
+import createPersistedState from 'vuex-persistedstate'
+
 Vue.use(Vuex)
 
+const dataState = createPersistedState({
+    key: 'exam-paper-system-vuex',
+    paths: ['token', 'userInfo']
+})
+
 const state = () => ({
-    token: '',
-    ktToken: '',
-    menus: [],
+    token: {},
     userInfo: {}
 })
 
 const actions = {
-    // tag
-    setKtToken ({ commit }, payload) {
-        commit('setKtToken', payload)
-    },
     setToken ({ commit }, payload) {
-        commit('setToken', payload)
-    },
-    setMenus ({ commit }, payload) {
-        commit('setMenus', payload)
+        commit('SETTOKEN', payload)
     },
     setUserInfo ({ commit }, payload) {
-        commit('setUserInfo', payload)
+        commit('SETUSERINFO', payload)
     }
 }
 const mutations = {
-    setKtToken (state, payload) {
-        state.ktToken = payload
-    },
-    setToken (state, payload) {
+    SETTOKEN (state, payload) {
         state.token = payload
     },
-    setMenus (state, payload) {
-        state.menus = [...payload]
-    },
-    setUserInfo (state, payload) {
+    SETUSERINFO (state, payload) {
         state.userInfo = { ...payload }
     }
 }
@@ -50,5 +42,6 @@ export default new Vuex.Store({
     state,
     getters,
     actions,
-    mutations
+    mutations,
+    plugins: [dataState]
 })

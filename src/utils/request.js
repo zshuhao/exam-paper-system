@@ -1,16 +1,18 @@
 import axios from 'axios'
+import { Message } from 'element-ui'
+
 const env = process.env
 const config = require(`../../config/app.${env}.json`)
-
 console.log(config)
 
 const service = axios.create({
-    baseURL: 'asdfas',
+    baseURL: config.api,
     timeout: 5000
 })
 
 service.interceptors.request.use(
     config => {
+        // console.log(config)
         return config
     },
     error => {
@@ -19,9 +21,14 @@ service.interceptors.request.use(
     }
 )
 
+// 0 响应成功
 service.interceptors.response.use(
     response => {
-        return response
+        const data = response.data
+        if (data.status !== 0) {
+            Message.error(data.message)
+        }
+        return data
     },
     error => {
         console.log(error)

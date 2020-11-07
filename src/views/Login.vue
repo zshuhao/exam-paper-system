@@ -22,21 +22,43 @@
                 ></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button class="button" type="primary">登陆</el-button>
+                <el-button class="button" type="primary" @click="login">登陆</el-button>
             </el-form-item>
         </el-form>
     </div>
 </template>
 
 <script>
-// import {} from ''
+import { mapState } from 'vuex'
+import { userLogin, getUserInfo } from '../api/user'
 export default {
     name: 'Login',
     data () {
         return {
             loginForm: {
-                username: '',
-                password: ''
+                username: 'admin',
+                password: '123456'
+            }
+        }
+    },
+    computed: {
+        ...mapState(['token'])
+    },
+    methods: {
+        async login () {
+            const res = await userLogin(this.loginForm)
+            if (res.status === 0) {
+                this.$store.dispatch('setToken', res.data)
+                this.fetchUserInfo()
+            }
+        },
+        async fetchUserInfo () {
+            const token = this.token.token
+            const user = await getUserInfo(token)
+            if (user.status === 0) {
+                this.$store.dispatch('setUserInfo', user.data)
+                this.$message.success('登陆成功')
+                this.$router.push('/dashboard')
             }
         }
     }

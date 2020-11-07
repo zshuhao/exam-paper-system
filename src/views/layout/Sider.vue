@@ -34,60 +34,63 @@
 <script>
 import variable from '../../less/variable.less'
 import { formatTree } from '@/utils/tool'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 const env = process.env
 export default {
     name: 'Sider',
     data () {
         return {
             env,
-            dafaultIndex: '',
-            routeList: [
-                {
-                    id: '1',
-                    icon: 'el-icon-notebook-2',
-                    path: '/',
-                    name: '首页'
-                },
-                {
-                    id: '2',
-                    icon: 'el-icon-notebook-2',
-                    path: '/department',
-                    name: '院系管理'
-                },
-                {
-                    id: '3',
-                    icon: 'el-icon-notebook-2',
-                    path: '/profession',
-                    name: '专业管理'
-                },
-                {
-                    id: '4',
-                    icon: 'el-icon-notebook-2',
-                    path: '/course',
-                    name: '科目管理'
-                },
-                {
-                    id: '5',
-                    icon: 'el-icon-notebook-2',
-                    path: '/exam',
-                    name: '试卷管理'
-                },
-                {
-                    id: '6',
-                    icon: 'el-icon-notebook-2',
-                    path: '/questionBank',
-                    name: '题库管理'
-                }
-            ]
+            dafaultIndex: ''
+            // routeList: [
+            //     {
+            //         id: '1',
+            //         icon: 'el-icon-notebook-2',
+            //         path: '/dashboard',
+            //         name: '首页'
+            //     },
+            //     {
+            //         id: '2',
+            //         icon: 'el-icon-notebook-2',
+            //         path: '/department',
+            //         name: '院系管理'
+            //     },
+            //     {
+            //         id: '3',
+            //         icon: 'el-icon-notebook-2',
+            //         path: '/profession',
+            //         name: '专业管理'
+            //     },
+            //     {
+            //         id: '4',
+            //         icon: 'el-icon-notebook-2',
+            //         path: '/course',
+            //         name: '科目管理'
+            //     },
+            //     {
+            //         id: '5',
+            //         icon: 'el-icon-notebook-2',
+            //         path: '/exam',
+            //         name: '试卷管理'
+            //     },
+            //     {
+            //         id: '6',
+            //         icon: 'el-icon-notebook-2',
+            //         path: '/questionBank',
+            //         name: '题库管理'
+            //     }
+            // ]
         }
     },
     computed: {
-        ...mapGetters([
-            'sidebar'
-        ]),
+        ...mapGetters(['sidebar']),
+        ...mapState(['userInfo']),
         isCollapse () {
             return !this.sidebar
+        },
+        routeList () {
+            console.log(this.userInfo)
+            return this.userInfo.permissions || []
         },
         variable () {
             return variable

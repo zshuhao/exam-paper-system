@@ -6,7 +6,7 @@ Vue.use(Router)
 export default new Router({
     routes: [
         {
-            path: '/',
+            path: '/dashboard',
             component: Home,
             name: 'Home',
             children: [

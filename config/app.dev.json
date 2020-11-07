@@ -1,6 +1,3 @@
 {
-    "basicToken": "b21zOm9tcw==",
-    "back": "http://localhost:8085/#",
-    "api": "http://kt-test.st.9now.net",
-    "ktApi": "http://kt.test.9now.net"
+    "api": "http://47.100.160.41:7300/mock/5fa630cd982da800167de7fe"
 }
