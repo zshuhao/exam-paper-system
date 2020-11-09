@@ -138,6 +138,7 @@ export default {
     transition: margin-left 0.28s;
     margin-left: 210px;
     position: relative;
+    overflow: hidden;
 }
 
 </style>

@@ -21,6 +21,11 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+
+.app-main {
+    padding: 20px;
+}
+
 /* fade-transform */
 .fade-transform-leave-active,
 .fade-transform-enter-active {
