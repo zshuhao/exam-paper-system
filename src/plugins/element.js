@@ -28,7 +28,9 @@ import {
     Loading,
     Breadcrumb,
     BreadcrumbItem,
-    Tag
+    Tag,
+    Card,
+    Tree
 } from 'element-ui'
 
 // Vue.prototype.$ELEMENT = { size: 'small' }
@@ -60,6 +62,8 @@ Vue.use(Loading.directive)
 Vue.use(Breadcrumb)
 Vue.use(BreadcrumbItem)
 Vue.use(Tag)
+Vue.use(Card)
+Vue.use(Tree)
 
 Vue.prototype.$msgbox = MessageBox
 Vue.prototype.$alert = MessageBox.alert

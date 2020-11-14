@@ -8,6 +8,15 @@ import './assets/iconfont/iconfont.css'
 import '@/plugins/element.js'
 import '@/plugins/custom.js'
 import '@/less/index.less'
+
+import VueQuillEditor from 'vue-quill-editor'
+
+// require styles
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+Vue.use(VueQuillEditor /* { default global options } */)
 // import './plugins/custom.js'
 // import { Message } from 'element-ui'
 // Vue.config.productionTip = false
