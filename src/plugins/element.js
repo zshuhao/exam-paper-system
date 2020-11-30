@@ -30,7 +30,8 @@ import {
     BreadcrumbItem,
     Tag,
     Card,
-    Tree
+    Tree,
+    RadioButton
 } from 'element-ui'
 
 // Vue.prototype.$ELEMENT = { size: 'small' }
@@ -64,6 +65,7 @@ Vue.use(BreadcrumbItem)
 Vue.use(Tag)
 Vue.use(Card)
 Vue.use(Tree)
+Vue.use(RadioButton)
 
 Vue.prototype.$msgbox = MessageBox
 Vue.prototype.$alert = MessageBox.alert
