@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-button size="small" type="primary">添加</el-button>
+        <el-button size="medium" type="primary">添加</el-button>
         <div class="table-contianer">
             <el-table :data="tableData" border stripe style="width: 100%">
                 <el-table-column prop="roleId" label="编号"></el-table-column>

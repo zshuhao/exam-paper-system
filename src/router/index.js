@@ -57,6 +57,22 @@ export default new Router({
                         title: '题库管理'
                     },
                     component: () => import(/* webpackChunkName: "main" */ '@/views/QuestionBank.vue')
+                },
+                {
+                    path: '/questionBank/add',
+                    name: 'QuestionAdd',
+                    meta: {
+                        title: '添加'
+                    },
+                    component: () => import(/* webpackChunkName: "main" */ '@/views/QuestionAddEdit.vue')
+                },
+                {
+                    path: '/questionBank/edit',
+                    name: 'QuestionEdit',
+                    meta: {
+                        title: '编辑'
+                    },
+                    component: () => import(/* webpackChunkName: "main" */ '@/views/QuestionAddEdit.vue')
                 }
             ]
         },

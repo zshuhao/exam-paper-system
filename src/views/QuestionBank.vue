@@ -33,17 +33,43 @@
             <div class="filter">
                 <div class="filter-item">
                     <span>题型：</span>
-                    <span>全部</span>
+                    <span class="active">全部</span>
                     <span>选择题</span>
+                    <span>填空题</span>
+                    <span>解答题</span>
                 </div>
-                <div>
-                    难易：
+                <div class="filter-item">
+                    <span>难易：</span>
+                    <span>全部</span>
+                    <span>较易</span>
+                    <span>易</span>
+                    <span>中</span>
+                    <span>难</span>
+                    <span>较难</span>
+                    <span class="active">超难</span>
                 </div>
-                <div>
-                    年份：
+                <div class="filter-item">
+                    <span>年份：</span>
+                    <span class="active">全部</span>
+                    <span>2020</span>
+                    <span>2019</span>
+                    <span>2018</span>
+                    <span>2017</span>
+                    <span>2016</span>
+                    <span>2015</span>
+                    <span>2014</span>
+                    <span>2014</span>
+                    <span>2014</span>
+                    <span>2014</span>
+                    <span>2014</span>
+                    <span>2014</span>
+                    <span>2014</span>
+                    <span>2014</span>
+                    <span>2014</span>
                 </div>
             </div>
-            <div class="pagination">
+            <div class="action">
+                <el-button type="primary" size="medium" @click="onAction('add')">添加</el-button>
                 <el-pagination
                     background
                     :page-size="100"
@@ -52,13 +78,13 @@
                 </el-pagination>
             </div>
             <question-item>
-                <el-button size="medium" type="primary">选题</el-button>
+                <el-button size="medium" type="primary" @click="onAction('edit')">编辑</el-button>
             </question-item>
             <question-item>
-                <el-button size="medium" type="primary">选题</el-button>
+                <el-button size="medium" type="primary">编辑</el-button>
             </question-item>
             <question-item>
-                <el-button size="medium" type="primary">选题</el-button>
+                <el-button size="medium" type="primary">编辑</el-button>
             </question-item>
             <div class="pagination">
                 <el-pagination
@@ -69,9 +95,6 @@
                 </el-pagination>
             </div>
         </div>
-        <!-- <quill-editor v-model="content"></quill-editor>
-        <el-button @click="test">测试</el-button>
-        <div v-html="content"></div> -->
     </div>
 </template>
 
@@ -86,8 +109,6 @@ export default {
             form: {
                 region: ''
             },
-            content: '<p>example content</p>',
-            editorOption: { /* quill options */ },
             data: [{
                 label: '一级 1',
                 children: [{
@@ -129,10 +150,14 @@ export default {
             }
         }
     },
-    mounted () {
-        console.log('this is current quill instance object', this.myQuillEditor)
-    },
     methods: {
+        onAction (type) {
+            if (type === 'add') {
+                this.$router.push('/questionBank/add')
+            } else {
+                this.$router.push('/questionBank/edit')
+            }
+        },
         onEditorChange (event) {
             console.log('onEditorChange')
         },
@@ -175,15 +200,43 @@ export default {
     .list {
         flex: 1;
         .filter {
-            height: 200px;
             border: 1px solid #eee;
             .filter-item {
+                font-size: 14px;
+                line-height: 2;
+                margin: 0 10px;
+                padding: 10px 0 10px 65px;
+                position: relative;
+                &:not(:last-child) {
+                    border-bottom: 1px dotted #ddd;
+                }
                 span {
-                    padding: 5px 10px;
+                    display: inline-block;
+                    &:first-child {
+                        position: absolute;
+                        left: 20px;
+                    }
+                }
+                span:not(:first-child) {
+                    padding: 0 10px;
                     border-radius: 6px;
+                    cursor: pointer;
+                    &:hover {
+                        background-color: #409EFF;
+                        color: #fff;
+                    }
+                }
+                .active {
                     background-color: #409EFF;
+                    color: #fff;
                 }
             }
+        }
+        .action {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 0;
+            align-items: center;
         }
         .pagination {
             padding: 20px 0;
