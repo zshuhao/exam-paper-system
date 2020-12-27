@@ -1,18 +1,17 @@
 <template>
     <div class="login-container">
-        <el-form class="login-form">
+        <el-form class="login-form" ref="form" :model="loginForm" :rules="rules">
             <h3 class="title">试卷管理系统</h3>
-
-            <el-form-item>
+            <el-form-item prop='phone'>
                 <el-input
                     class="input"
-                    placeholder="用户名"
+                    placeholder="手机号"
                     prefix-icon="el-icon-user"
-                    v-model="loginForm.username"
+                    v-model="loginForm.phone"
                 ></el-input>
             </el-form-item>
 
-            <el-form-item>
+            <el-form-item prop="password">
                 <el-input
                     class="input"
                     placeholder="密码"
@@ -30,14 +29,18 @@
 
 <script>
 import { mapState } from 'vuex'
-import { userLogin, getUserInfo } from '../api/user'
+import { userLogin } from '../api/user'
 export default {
     name: 'Login',
     data () {
         return {
             loginForm: {
-                username: 'admin',
+                phone: '17739019681',
                 password: '123456'
+            },
+            rules: {
+                phone: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
+                password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
             }
         }
     },
@@ -45,21 +48,18 @@ export default {
         ...mapState(['token'])
     },
     methods: {
-        async login () {
-            const res = await userLogin(this.loginForm)
-            if (res.status === 0) {
-                this.$store.dispatch('setToken', res.data)
-                this.fetchUserInfo()
-            }
-        },
-        async fetchUserInfo () {
-            const token = this.token.token
-            const user = await getUserInfo(token)
-            if (user.status === 0) {
-                this.$store.dispatch('setUserInfo', user.data)
-                this.$message.success('登陆成功')
-                this.$router.push('/dashboard')
-            }
+        login () {
+            this.$refs.form.validate(async (valid) => {
+                if (valid) {
+                    const res = await userLogin(this.loginForm)
+                    if (res.success) {
+                        this.$store.dispatch('setUserInfo', res.data)
+                        this.$router.push('/dashboard')
+                    }
+                } else {
+                    return false
+                }
+            })
         }
     }
 }

@@ -26,7 +26,7 @@ service.interceptors.response.use(
     response => {
         const data = response.data
         if (data.status !== 0) {
-            Message.error(data.message)
+            Message.error(data.errDesc)
         }
         return data
     },

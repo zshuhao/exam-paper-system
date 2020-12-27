@@ -11,18 +11,18 @@
             :router="true"
             @select="selected">
 
-            <template v-for="item in routeList">
+            <template v-for="item in sideMenu">
                 <el-submenu v-if="item.children && item.children.length > 0" index="1" :key="item.id">
                     <template slot="title">
                         <i :class="item.icon"></i>
                         <span>{{ item.name }}</span>
                     </template>
-                    <el-menu-item v-for="child in item.children" :key="child.id" :index="child.path">
+                    <el-menu-item v-for="child in item.children" :key="child.id" :index="child.url">
                         <i :class="child.icon"></i>
                         <span slot="title">{{ child.name }}</span>
                     </el-menu-item>
                 </el-submenu>
-                <el-menu-item v-else :key="item.id" :index="item.path">
+                <el-menu-item v-else :key="item.id" :index="item.url">
                     <i :class="item.icon"></i>
                     <span slot="title">{{ item.name }}</span>
                 </el-menu-item>
@@ -35,52 +35,11 @@
 import variable from '../../less/variable.less'
 import { formatTree } from '@/utils/tool'
 import { mapGetters, mapState } from 'vuex'
-const env = process.env
+
 export default {
     name: 'Sider',
     data () {
-        return {
-            env,
-            dafaultIndex: ''
-            // routeList: [
-            //     {
-            //         id: '1',
-            //         icon: 'el-icon-notebook-2',
-            //         path: '/dashboard',
-            //         name: '首页'
-            //     },
-            //     {
-            //         id: '2',
-            //         icon: 'el-icon-notebook-2',
-            //         path: '/department',
-            //         name: '院系管理'
-            //     },
-            //     {
-            //         id: '3',
-            //         icon: 'el-icon-notebook-2',
-            //         path: '/profession',
-            //         name: '专业管理'
-            //     },
-            //     {
-            //         id: '4',
-            //         icon: 'el-icon-notebook-2',
-            //         path: '/course',
-            //         name: '科目管理'
-            //     },
-            //     {
-            //         id: '5',
-            //         icon: 'el-icon-notebook-2',
-            //         path: '/exam',
-            //         name: '试卷管理'
-            //     },
-            //     {
-            //         id: '6',
-            //         icon: 'el-icon-notebook-2',
-            //         path: '/questionBank',
-            //         name: '题库管理'
-            //     }
-            // ]
-        }
+        return {}
     },
     computed: {
         ...mapGetters(['sidebar']),
@@ -88,38 +47,19 @@ export default {
         isCollapse () {
             return !this.sidebar
         },
-        routeList () {
-            console.log(this.userInfo)
-            return this.userInfo.permissions || []
-        },
         variable () {
             return variable
         },
         sideMenu () {
-            let menu = this.$store.state.userInfo.permissionList || []
-            let pid = ''
-
-            menu = menu.filter(item => {
-                const pattern = /^(M0206)/
-                if (item.code === 'M0206') pid = item.id
-
-                return item.code !== 'M0206' && pattern.test(item.code)
-            })
-
+            const menu = this.$store.state.userInfo.menu || []
+            const pid = null
             const menuList = JSON.parse(JSON.stringify(menu))
-            console.log(menuList)
-            // console.log(formatTree(menuList, pid))
             return formatTree(menuList, pid) || []
         },
         dafaultRouterIndex () {
             const route = this.$route
-            return route.query.no === undefined
-                ? route.path
-                : `${route.path}?no=${route.query.no}`
+            return route.path
         }
-    },
-    mounted () {
-        console.log(variable)
     },
     methods: {
         selected (index) {

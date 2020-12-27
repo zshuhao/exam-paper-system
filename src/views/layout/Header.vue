@@ -4,19 +4,24 @@
         <div class="toggle" @click="onToggleSider">
             <i :class="['iconfont', sidebar ? 'icon-toggle-left' : 'icon-toggle-right']"></i>
         </div>
-        <!-- <el-breadcrumb class="breadcrumb" separator="/">
-            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item>
-            <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-            <el-breadcrumb-item>活动详情</el-breadcrumb-item>
-        </el-breadcrumb> -->
         <Breadcrumb></Breadcrumb>
+        <div class="user-name">
+            <el-tag size="small">{{userInfo.role_name || '无角色'}}</el-tag>
+            <el-dropdown trigger="click" @command="onHandleCommand">
+                <span class="el-dropdown-link">
+                    {{userInfo.user_name || '用户名'}}<i class="el-icon-arrow-down el-icon--right"></i>
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item command='exit' icon="el-icon-switch-button">退出</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+        </div>
     </div>
 </template>
 
 <script>
 import Breadcrumb from './Breadcrumb'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 const config = require(`../../../config/app.${process.env}.json`)
 
 export default {
@@ -29,7 +34,8 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['sidebar'])
+        ...mapGetters(['sidebar']),
+        ...mapState(['userInfo'])
     },
     methods: {
         loginOut () {
@@ -37,6 +43,11 @@ export default {
         },
         onToggleSider () {
             this.$store.dispatch('app/toggleSideBar')
+        },
+        onHandleCommand (command) {
+            if (command === 'exit') {
+                this.$router.push('/login')
+            }
         }
     }
 }
@@ -55,6 +66,11 @@ export default {
         &:hover {
             background: rgba(0, 0, 0, .025)
         }
+    }
+    .user-name {
+        float: right;
+        line-height: 50px;
+        padding-right: 20px;
     }
 }
 </style>
