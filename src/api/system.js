@@ -48,10 +48,50 @@ export function deleteUser (res) {
     })
 }
 
-export function roleList () {
+export function roleList (res) {
     return request({
         url: '/system/roleList',
-        method: 'GET',
-        params: {}
+        method: 'POST',
+        data: {
+            ...res
+        }
+    })
+}
+
+export function addRole (res) {
+    return request({
+        url: '/system/addRole',
+        method: 'POST',
+        data: {
+            ...res
+        }
+    })
+}
+
+export function editRole (res) {
+    return request({
+        url: '/system/editRole',
+        method: 'POST',
+        data: {
+            ...res
+        }
+    })
+}
+
+export function deleteRole (res) {
+    return request({
+        url: '/system/deleteRole',
+        method: 'POST',
+        data: {
+            ...res
+        }
+    })
+}
+
+export function queryPermissions () {
+    return request({
+        url: '/system/permissions',
+        method: 'POST',
+        data: {}
     })
 }

@@ -29,7 +29,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { userLogin } from '../api/user'
+import { userLogin } from '../api/system'
 export default {
     name: 'Login',
     data () {

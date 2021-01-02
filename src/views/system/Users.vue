@@ -16,7 +16,7 @@
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" >查询</el-button>
-                <el-button type="primary" @click="dialogVisible = true">添加</el-button>
+                <el-button type="primary" @click="dialogVisible = true; dialogtitle = '添加'; isAdd = true">添加</el-button>
             </el-form-item>
         </el-form>
         <div class="table-contianer">
@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import { userList, roleList, addUser, editUser, deleteUser } from '../../api/user'
+import { userList, roleList, addUser, editUser, deleteUser } from '../../api/system'
 export default {
     name: 'Users',
     data () {
