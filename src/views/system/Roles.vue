@@ -30,45 +30,11 @@ export default {
     name: 'Roles',
     data () {
         return {
-            tableData: [
-                {
-                    id: 1,
-                    roleId: '0001',
-                    roleName: '超级管理员',
-                    num: 2
-                },
-                {
-                    id: 2,
-                    roleId: '0002',
-                    roleName: '管理员',
-                    num: 6
-                },
-                {
-                    id: 3,
-                    roleId: '0003',
-                    roleName: '普通员工',
-                    num: 10
-                },
-                {
-                    id: 4,
-                    roleId: '0004',
-                    roleName: '其他',
-                    num: 30
-                },
-                {
-                    id: 5,
-                    roleId: '0005',
-                    roleName: '保洁',
-                    num: 50
-                },
-                {
-                    id: 6,
-                    roleId: '0006',
-                    roleName: '保安',
-                    num: 100
-                }
-            ]
+            tableData: []
         }
+    },
+    methods: {
+        
     }
 }
 </script>

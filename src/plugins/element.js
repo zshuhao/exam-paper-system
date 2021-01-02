@@ -31,7 +31,9 @@ import {
     Tag,
     Card,
     Tree,
-    RadioButton
+    RadioButton,
+    Popconfirm,
+    Popover
 } from 'element-ui'
 
 // Vue.prototype.$ELEMENT = { size: 'small' }
@@ -66,6 +68,8 @@ Vue.use(Tag)
 Vue.use(Card)
 Vue.use(Tree)
 Vue.use(RadioButton)
+Vue.use(Popconfirm)
+Vue.use(Popover)
 
 Vue.prototype.$msgbox = MessageBox
 Vue.prototype.$alert = MessageBox.alert
