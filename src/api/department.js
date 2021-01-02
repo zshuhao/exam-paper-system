@@ -117,3 +117,35 @@ export function deleteCourse (res) {
         }
     })
 }
+
+// 知识点
+
+export function queryPoints (res) {
+    return request({
+        url: '/department/points',
+        method: 'post',
+        data: {
+            ...res
+        }
+    })
+}
+
+export function addPoints (res) {
+    return request({
+        url: '/department/addPoints',
+        method: 'post',
+        data: {
+            ...res
+        }
+    })
+}
+
+export function deletePoints (res) {
+    return request({
+        url: '/department/deletePoints',
+        method: 'post',
+        data: {
+            ...res
+        }
+    })
+}

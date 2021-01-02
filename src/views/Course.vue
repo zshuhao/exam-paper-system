@@ -39,6 +39,7 @@
                         >
                             <el-button class="red" slot="reference" type="text" size="mini">删除</el-button>
                         </el-popconfirm>
+                        <el-button type="text" size="mini" @click="onAction('set', scope.row)">设置知识点</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -79,15 +80,75 @@
                 <el-button type="primary" @click="onAdd">确 定</el-button>
             </span>
         </el-dialog>
+        <el-dialog
+            title="知识点设置"
+            :visible.sync="pointVisible"
+            width="700px"
+            :before-close="onPointCancel"
+        >
+            <div class="add">
+                <el-input v-model="point" class="wh-200 input" size="mini"></el-input>
+                <el-button type="text" size="mini" @click="onAddPoint">添加</el-button>
+            </div>
+            <div class="tree-box" v-loading="addPointLoading">
+                <el-tree
+                    ref="tree"
+                    :data="points"
+                    :props="defaultProps"
+                    node-key="id"
+                >
+                    <span class="custom-tree-node" slot-scope="{ node, data }">
+                        <span>{{ node.label }}</span>
+                        <span>
+                            <el-popover
+                                placement="left"
+                                width="160"
+                                v-model="data.visible">
+                                <el-input v-model="data.value" size="mini"></el-input>
+                                <div style="text-align: right; margin-top: 10px">
+                                    <el-button size="mini" type="text" @click="onAppendCancel(data)">取消</el-button>
+                                    <el-button type="primary" size="mini" @click="append(data)">确定</el-button>
+                                </div>
+                                <el-button type="text" size="mini" @click="(e) => e.stopPropagation()" slot="reference">新增</el-button>
+                            </el-popover>
+                            <el-popconfirm
+                                placement="left"
+                                title="确定要删除吗？"
+                                @onConfirm="remove(data)"
+                            >
+                                <el-button class="red" slot="reference" @click="(e) => e.stopPropagation()" type="text" size="mini">删除</el-button>
+                            </el-popconfirm>
+                        </span>
+                    </span>
+                </el-tree>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="pointVisible = false">取 消</el-button>
+                <el-button type="primary" @click="pointVisible = false">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-import { queryDepartmentList, queryProfessionList, queryCourseList, addCourse, editCourse, deleteCourse } from '../api/department'
+import {
+    queryDepartmentList,
+    queryProfessionList,
+    queryCourseList,
+    queryPoints,
+    addCourse,
+    editCourse,
+    deleteCourse,
+    addPoints,
+    deletePoints
+} from '../api/department'
+import { formatTree } from '../utils/tool'
 export default {
     name: 'Department',
     data () {
         return {
+            addPointLoading: false,
+            visible: false,
             tableData: [],
             departmentList: [],
             professionList: [],
@@ -105,7 +166,14 @@ export default {
                 departmentId: [{ required: true, message: '请选择所属学院', trigger: 'change' }],
                 professionId: [{ required: true, message: '请选择所属专业', trigger: 'change' }]
             },
-            row: {}
+            row: {},
+            pointVisible: false,
+            points: [],
+            point: '',
+            defaultProps: {
+                children: 'children',
+                label: 'k_name'
+            }
         }
     },
     mounted () {
@@ -130,6 +198,19 @@ export default {
             const res = await queryProfessionList()
             if (res.success) {
                 this.professionList = res.data || []
+            }
+        },
+        async getPoints (cb) {
+            this.addPointLoading = true
+            const params = {
+                id: this.row.c_id
+            }
+            const res = await queryPoints(params)
+            if (res.success) {
+                const data = res.data || []
+                this.points = formatTree(data, null, 'k_id', 'k_pid')
+                this.addPointLoading = false
+                cb && cb()
             }
         },
         onAddCancel (done) {
@@ -173,12 +254,62 @@ export default {
                 this.addForm.professionId = row.p_id
                 this.row = row
                 this.isAdd = false
-            } else {
+            } else if (type === 'delete') {
                 const res = await deleteCourse({ id: row.c_id })
                 if (res.success) {
                     this.$message.success('删除成功！')
                     this.initData()
                 }
+            } else {
+                this.row = row
+                this.getPoints(() => { this.pointVisible = true })
+            }
+        },
+        onPointCancel (done) {
+            this.point = ''
+            this.points = []
+            done()
+        },
+        async onAddPoint () {
+            if (this.point === '') {
+                this.$message.warning('未填写内容！')
+                return
+            }
+            const params = {
+                name: this.point,
+                cId: this.row.c_id
+            }
+            const res = await addPoints(params)
+            if (res.success) {
+                this.getPoints(() => {
+                    this.point = ''
+                })
+            }
+        },
+        onAppendCancel (data) {
+            data.value = ''
+            data.visible = false
+        },
+        async append (data) {
+            if (data.value === undefined || data.value === '') {
+                this.$message.warning('未填写内容！')
+                return
+            }
+            const params = {
+                name: data.value,
+                cId: this.row.c_id,
+                kPid: data.k_id
+            }
+            const res = await addPoints(params)
+            if (res.success) {
+                data.visible = false
+                this.getPoints()
+            }
+        },
+        async remove (data) {
+            const res = await deletePoints({ id: data.k_id })
+            if (res.success) {
+                this.getPoints()
             }
         },
         onDepartmentChange (e) {
@@ -201,8 +332,24 @@ export default {
 .table-contianer {
     margin: 20px 0;
 }
+.add {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    .input {
+        margin-right: 20px;
+    }
+}
 .tree-box {
     height: 300px;
+    width: 500px;
+    margin: 0 auto;
     overflow-y: auto;
+    .custom-tree-node {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
 }
 </style>
