@@ -1,102 +1,116 @@
 <template>
     <div>
-        <el-form inline size="medium">
-            <el-form-item>
-                <el-select class="wh-200" v-model="searchForm.role" clearable placeholder="请选择角色">
-                    <el-option :value="1" label="超级管理员"></el-option>
-                    <el-option :value="2" label="管理员"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item>
-                <el-input class="wh-200" v-model="searchForm.user" clearable placeholder="请输入用户名"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary">查询</el-button>
-                <el-button type="primary">添加</el-button>
-            </el-form-item>
-        </el-form>
+        <el-button size="medium" type="primary" @click="dialogVisible = true; dialogtitle = '添加'; isAdd = true">添加</el-button>
         <div class="table-contianer">
-            <el-table :data="tableData" border stripe>
-                <el-table-column prop="userId" label="用户编号"></el-table-column>
-                <el-table-column prop="userName" label="用户名"></el-table-column>
-                <el-table-column prop="role" label="用户角色">
-                    <template slot-scope="scope">
-                        <el-tag>{{ scope.row.role }}</el-tag>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="mobile" label="手机号"></el-table-column>
+            <el-table :data="tableData" border stripe style="width: 100%">
+                <el-table-column prop="d_id" label="编号"></el-table-column>
+                <el-table-column prop="d_name" label="学院"></el-table-column>
                 <el-table-column prop="action" label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" size="mini">查看</el-button>
-                        <el-button type="text" size="mini">编辑</el-button>
-                        <el-button class="red" type="text" size="mini">删除</el-button>
+                        <el-button type="text" size="mini" @click="onAction('edit', scope.row)">编辑</el-button>
+                        <el-popconfirm
+                            title="确定要删除吗？"
+                            @onConfirm="onAction('delete', scope.row)"
+                        >
+                            <el-button class="red" slot="reference" type="text" size="mini">删除</el-button>
+                        </el-popconfirm>
                     </template>
                 </el-table-column>
             </el-table>
         </div>
-        <div class="footer">
-            <el-pagination
-                background
-                layout="prev, pager, next"
-                :total="1000">
-            </el-pagination>
-        </div>
+        <el-dialog
+            :title="dialogtitle"
+            :visible.sync="dialogVisible"
+            width="700px"
+            :before-close="onAddCancel"
+        >
+            <el-form ref="addForm" :model="addForm" :rules="addFormRules" size="medium" label-width="120px">
+                <el-form-item label="学院名称" prop="name">
+                    <el-input class="wh-400" v-model="addForm.name" clearable placeholder="请输入"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="onAdd">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-
+import { queryDepartmentList, addDepartment, editDepartment, deleteDepartmen } from '../api/department'
 export default {
     name: 'Department',
     data () {
         return {
-            tableData: [
-                {
-                    id: 1,
-                    userId: '0001',
-                    userName: '张书豪',
-                    mobile: '177239884839',
-                    role: '超级管理员'
-                },
-                {
-                    id: 2,
-                    userId: '0002',
-                    userName: '张三',
-                    mobile: '17723456839',
-                    role: '管理员'
-                },
-                {
-                    id: 3,
-                    userId: '0003',
-                    userName: '李四',
-                    mobile: '177245643457',
-                    role: '秘书'
-                },
-                {
-                    id: 4,
-                    userId: '0004',
-                    userName: '王伟',
-                    mobile: '133239345645',
-                    role: '大老板'
-                },
-                {
-                    id: 5,
-                    userId: '0005',
-                    userName: '李华',
-                    mobile: '183239454866',
-                    role: '保洁阿姨'
-                },
-                {
-                    id: 6,
-                    userId: '0006',
-                    userName: '尼采',
-                    mobile: '177239822342',
-                    role: '保安大人'
+            tableData: [],
+            dialogVisible: false,
+            dialogtitle: '添加',
+            isAdd: true,
+            addForm: {
+                name: ''
+            },
+            addFormRules: {
+                name: [{ required: true, message: '请输入学院名称', trigger: 'change' }]
+            },
+            row: {}
+        }
+    },
+    mounted () {
+        this.initData()
+    },
+    methods: {
+        async initData () {
+            const res = await queryDepartmentList()
+            if (res.success) {
+                this.tableData = res.data || []
+            }
+        },
+        onAddCancel (done) {
+            this.$refs.addForm.resetFields()
+            done()
+        },
+        onAdd () {
+            this.$refs.addForm.validate(async (valid) => {
+                if (valid) {
+                    if (this.isAdd) {
+                        const params = {
+                            ...this.addForm
+                        }
+                        const res = await addDepartment(params)
+                        if (res.success) {
+                            this.$message.success('添加成功！')
+                            this.initData()
+                            this.dialogVisible = false
+                        }
+                    } else {
+                        const params = {
+                            ...this.addForm,
+                            id: this.row.d_id
+                        }
+                        const res = await editDepartment(params)
+                        if (res.success) {
+                            this.$message.success('修改成功！')
+                            this.initData()
+                            this.dialogVisible = false
+                        }
+                    }
                 }
-            ],
-            searchForm: {
-                role: '',
-                user: ''
+            })
+        },
+        async onAction (type, row) {
+            if (type === 'edit') {
+                this.dialogVisible = true
+                this.dialogtitle = '编辑'
+                this.addForm.name = row.d_name
+                this.row = row
+                this.isAdd = false
+            } else {
+                const res = await deleteDepartmen({ id: row.d_id })
+                if (res.success) {
+                    this.$message.success('删除成功！')
+                    this.initData()
+                }
             }
         }
     }
@@ -105,9 +119,10 @@ export default {
 
 <style lang="less" scoped>
 .table-contianer {
-    margin-bottom: 20px;
+    margin: 20px 0;
 }
-.footer {
-    text-align: right;
+.tree-box {
+    height: 300px;
+    overflow-y: auto;
 }
 </style>
