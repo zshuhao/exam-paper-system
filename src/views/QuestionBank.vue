@@ -5,50 +5,63 @@
             <div>
                 <el-form class="search-form" size="medium" label-width="40px">
                     <el-form-item label="院系">
-                        <el-select v-model="form.region" placeholder="请选择活动区域">
-                            <el-option label="区域一" value="shanghai"></el-option>
-                            <el-option label="区域二" value="beijing"></el-option>
+                        <el-select v-model="form.department" clearable @change="onDepChange" placeholder="请选择院系">
+                            <el-option
+                                v-for="item in departmentList"
+                                :key="item.d_id"
+                                :value="item.d_id"
+                                :label="item.d_name"
+                            ></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="专业">
-                        <el-select v-model="form.region" placeholder="请选择活动区域">
-                            <el-option label="区域一" value="shanghai"></el-option>
-                            <el-option label="区域二" value="beijing"></el-option>
+                        <el-select v-model="form.profession" clearable @change="onProChange" placeholder="请选择专业">
+                            <el-option
+                                v-for="item in professionList"
+                                :key="item.p_id"
+                                :value="item.p_id"
+                                :label="item.p_name"
+                            ></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="科目">
-                        <el-select v-model="form.region" placeholder="请选择活动区域">
-                            <el-option label="区域一" value="shanghai"></el-option>
-                            <el-option label="区域二" value="beijing"></el-option>
+                        <el-select v-model="form.course" clearable @change="onCourseChange" placeholder="请选择科目">
+                            <el-option
+                                v-for="item in courseList"
+                                :key="item.c_id"
+                                :value="item.c_id"
+                                :label="item.c_name"
+                            ></el-option>
                         </el-select>
                     </el-form-item>
                 </el-form>
             </div>
             <h2  class="title">知识点</h2>
             <div class="tree">
-                <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+                <el-tree :data="pointList" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
             </div>
         </div>
         <div class="list">
             <div class="filter">
                 <div class="filter-item">
                     <span>题型：</span>
-                    <span class="active">全部</span>
-                    <span>选择题</span>
-                    <span>填空题</span>
-                    <span>解答题</span>
+                    <span
+                        v-for="(item, index) in questionType"
+                        :key="item.key"
+                        :class="{ active: index === form.questionType }"
+                        @click="onFilter('question', item.key)"
+                    >{{ item.name }}</span>
                 </div>
                 <div class="filter-item">
                     <span>难易：</span>
-                    <span>全部</span>
-                    <span>较易</span>
-                    <span>易</span>
-                    <span>中</span>
-                    <span>难</span>
-                    <span>较难</span>
-                    <span class="active">超难</span>
+                    <span
+                        v-for="(item, index) in difficulty"
+                        :key="item.key"
+                        :class="{ active: index === form.difficulty }"
+                        @click="onFilter('difficulty', item.key)"
+                    >{{ item.name }}</span>
                 </div>
-                <div class="filter-item">
+                <!-- <div class="filter-item">
                     <span>年份：</span>
                     <span class="active">全部</span>
                     <span>2020</span>
@@ -66,7 +79,7 @@
                     <span>2014</span>
                     <span>2014</span>
                     <span>2014</span>
-                </div>
+                </div> -->
             </div>
             <div class="action">
                 <el-button type="primary" size="medium" @click="onAction('add')">添加</el-button>
@@ -100,57 +113,92 @@
 
 <script>
 import QuestionItem from '../components/QuestionItem'
+import { queryDepartmentList, queryProfessionList, queryCourseList, queryPoints } from '../api/department'
+import { formatTree } from '../utils/tool'
 export default {
     name: 'QUestionBank',
     components: { QuestionItem },
     data () {
         return {
-            radio: false,
             form: {
-                region: ''
+                questionType: 0,
+                difficulty: 0,
+                department: '',
+                profession: '',
+                course: ''
             },
-            data: [{
-                label: '一级 1',
-                children: [{
-                    label: '二级 1-1',
-                    children: [{
-                        label: '三级 1-1-1'
-                    }]
-                }]
-            }, {
-                label: '一级 2',
-                children: [{
-                    label: '二级 2-1',
-                    children: [{
-                        label: '三级 2-1-1'
-                    }]
-                }, {
-                    label: '二级 2-2',
-                    children: [{
-                        label: '三级 2-2-1'
-                    }]
-                }]
-            }, {
-                label: '一级 3',
-                children: [{
-                    label: '二级 3-1',
-                    children: [{
-                        label: '三级 3-1-1'
-                    }]
-                }, {
-                    label: '二级 3-2',
-                    children: [{
-                        label: '三级 3-2-1'
-                    }]
-                }]
-            }],
+            departmentList: [],
+            professionList: [],
+            courseList: [],
+            pointList: [],
+            data: [],
             defaultProps: {
                 children: 'children',
-                label: 'label'
-            }
+                label: 'k_name'
+            },
+            questionType: [
+                { key: 0, name: '全部' },
+                { key: 1, name: '选择题' },
+                { key: 2, name: '填空题' },
+                { key: 3, name: '解答题' }
+            ],
+            difficulty: [
+                { key: 0, name: '全部' },
+                { key: 1, name: '较易' },
+                { key: 2, name: '易' },
+                { key: 3, name: '中' },
+                { key: 4, name: '难' },
+                { key: 5, name: '较难' },
+                { key: 6, name: '超难' }
+            ]
         }
     },
+    mounted () {
+        this.getDepartment()
+    },
     methods: {
+        initData () {
+
+        },
+        async getDepartment () {
+            const res = await queryDepartmentList()
+            if (res.success) {
+                this.departmentList = res.data || []
+            }
+        },
+        async getProfession (id) {
+            const res = await queryProfessionList({ depId: id })
+            if (res.success) {
+                this.professionList = res.data || []
+            }
+        },
+        async getCourse (id) {
+            const res = await queryCourseList({ pId: id })
+            if (res.success) {
+                this.courseList = res.data || []
+            }
+        },
+        async getPoint (e) {
+            const res = await queryPoints({ id: e })
+            if (res.success) {
+                const data = res.data || []
+                this.pointList = formatTree(data, null, 'k_id', 'k_pid')
+            }
+        },
+        onDepChange (e) {
+            this.form.profession = ''
+            this.form.course = ''
+            this.pointList = []
+            this.getProfession(e)
+        },
+        onProChange (e) {
+            this.form.course = ''
+            this.pointList = []
+            this.getCourse(e)
+        },
+        onCourseChange (e) {
+            this.getPoint(e)
+        },
         onAction (type) {
             if (type === 'add') {
                 this.$router.push('/questionBank/add')
@@ -158,11 +206,13 @@ export default {
                 this.$router.push('/questionBank/edit')
             }
         },
-        onEditorChange (event) {
-            console.log('onEditorChange')
-        },
-        test () {
-            console.log(this.content)
+        onFilter (type, value) {
+            if (type === 'question') {
+                this.form.questionType = value
+            }
+            if (type === 'difficulty') {
+                this.form.difficulty = value
+            }
         },
         handleNodeClick (e) {
             console.log(e)

@@ -40,11 +40,13 @@ export function deleteDepartmen (res) {
 
 // 专业
 
-export function queryProfessionList () {
+export function queryProfessionList (res = {}) {
     return request({
         url: '/department/professionList',
         method: 'post',
-        data: {}
+        data: {
+            ...res
+        }
     })
 }
 
@@ -80,11 +82,13 @@ export function deleteProfession (res) {
 
 // 科目
 
-export function queryCourseList () {
+export function queryCourseList (res = {}) {
     return request({
         url: '/department/courseList',
         method: 'post',
-        data: {}
+        data: {
+            ...res
+        }
     })
 }
 

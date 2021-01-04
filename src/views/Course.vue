@@ -254,6 +254,7 @@ export default {
                 this.addForm.professionId = row.p_id
                 this.row = row
                 this.isAdd = false
+                this.professionSelectOptions = this.professionList.filter(item => item.d_id === row.d_id)
             } else if (type === 'delete') {
                 const res = await deleteCourse({ id: row.c_id })
                 if (res.success) {
