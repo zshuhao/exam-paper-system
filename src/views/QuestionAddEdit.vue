@@ -100,6 +100,7 @@ import {
     queryCourseList,
     queryPoints
 } from '../api/department'
+import { addQuestion } from '../api/question'
 import { formatTree } from '../utils/tool'
 
 export default {
@@ -145,11 +146,16 @@ export default {
     },
     methods: {
         onSave () {
-            console.log(this.question)
             this.dialogVisible = true
         },
-        onConfirm () {
+        async onConfirm () {
             console.log(this.form)
+            const res = await addQuestion(this.form)
+            if (res.success) {
+                this.$message.success('添加成功！')
+                this.dialogVisible = false
+                this.$router.back(-1)
+            }
         },
         async onDialogOpen () {
             const res = await queryDepartmentList()

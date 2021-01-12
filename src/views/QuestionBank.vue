@@ -85,26 +85,24 @@
                 <el-button type="primary" size="medium" @click="onAction('add')">添加</el-button>
                 <el-pagination
                     background
-                    :page-size="100"
+                    :current-page.sync="form.pageNo"
                     layout="total, prev, pager, next"
-                    :total="1000">
+                    :total="total">
                 </el-pagination>
             </div>
-            <question-item>
-                <el-button size="medium" type="primary" @click="onAction('edit')">编辑</el-button>
-            </question-item>
-            <question-item>
-                <el-button size="medium" type="primary">编辑</el-button>
-            </question-item>
-            <question-item>
-                <el-button size="medium" type="primary">编辑</el-button>
-            </question-item>
+
+            <template v-for="item in questionList">
+                <question-item :item="item" :key="item.q_id">
+                    <el-button size="medium" type="primary" @click="onAction('edit')">编辑</el-button>
+                </question-item>
+            </template>
+
             <div class="pagination">
                 <el-pagination
                     background
-                    :page-size="100"
+                    :current-page.sync="form.pageNo"
                     layout="total, prev, pager, next"
-                    :total="1000">
+                    :total="total">
                 </el-pagination>
             </div>
         </div>
@@ -114,6 +112,7 @@
 <script>
 import QuestionItem from '../components/QuestionItem'
 import { queryDepartmentList, queryProfessionList, queryCourseList, queryPoints } from '../api/department'
+import { queryQuestionList } from '../api/question'
 import { formatTree } from '../utils/tool'
 export default {
     name: 'QUestionBank',
@@ -125,13 +124,16 @@ export default {
                 difficulty: 0,
                 department: '',
                 profession: '',
-                course: ''
+                course: '',
+                pageNo: 1,
+                pageSize: 10
             },
+            total: 10,
             departmentList: [],
             professionList: [],
             courseList: [],
             pointList: [],
-            data: [],
+            questionList: [],
             defaultProps: {
                 children: 'children',
                 label: 'k_name'
@@ -155,10 +157,14 @@ export default {
     },
     mounted () {
         this.getDepartment()
+        this.initData()
     },
     methods: {
-        initData () {
-
+        async initData () {
+            const res = await queryQuestionList(this.form)
+            if (res.success) {
+                this.questionList = res.data || []
+            }
         },
         async getDepartment () {
             const res = await queryDepartmentList()
