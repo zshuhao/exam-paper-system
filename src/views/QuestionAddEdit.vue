@@ -39,14 +39,14 @@
             :visible.sync="dialogVisible"
             @open="onDialogOpen"
             width="500px">
-            <el-form class="form" size="medium" label-width="70px">
+            <el-form class="form" size="medium" label-width="70px" v-loading="formLoading">
                 <el-form-item label="院系">
                     <el-select class="input" v-model="form.department" @change="onDepChange" placeholder="请选择所属院系">
                         <el-option
                             v-for="item in departmentList"
                             :key="item.d_id"
                             :label="item.d_name"
-                            :value="item.d_id">
+                            :value="item.d_id + ''">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -56,7 +56,7 @@
                             v-for="item in professionList"
                             :key="item.p_id"
                             :label="item.p_name"
-                            :value="item.p_id">
+                            :value="item.p_id + ''">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -66,7 +66,7 @@
                             v-for="item in courseList"
                             :key="item.c_id"
                             :label="item.c_name"
-                            :value="item.c_id">
+                            :value="item.c_id + ''">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -79,6 +79,7 @@
                             node-key="k_id"
                             show-checkbox
                             check-strictly
+                            default-expand-all
                             @check-change="check"
                         >
                         </el-tree>
@@ -100,7 +101,7 @@ import {
     queryCourseList,
     queryPoints
 } from '../api/department'
-import { addQuestion } from '../api/question'
+import { addQuestion, queryQuestion, editQuestion } from '../api/question'
 import { formatTree } from '../utils/tool'
 
 export default {
@@ -110,6 +111,7 @@ export default {
             pointLoading: false,
             editorOption: { /* quill options */ },
             dialogVisible: false,
+            formLoading: false,
             form: {
                 question: '',
                 solution: '',
@@ -122,17 +124,17 @@ export default {
                 department: ''
             },
             questionType: [
-                { key: 1, name: '选择题' },
-                { key: 2, name: '填空题' },
-                { key: 3, name: '解答题' }
+                { key: '1', name: '选择题' },
+                { key: '2', name: '填空题' },
+                { key: '3', name: '解答题' }
             ],
             difficulty: [
-                { key: 1, name: '较易' },
-                { key: 2, name: '易' },
-                { key: 3, name: '中' },
-                { key: 4, name: '难' },
-                { key: 5, name: '较难' },
-                { key: 6, name: '超难' }
+                { key: '1', name: '较易' },
+                { key: '2', name: '易' },
+                { key: '3', name: '中' },
+                { key: '4', name: '难' },
+                { key: '5', name: '较难' },
+                { key: '6', name: '超难' }
             ],
             departmentList: [],
             professionList: [],
@@ -141,20 +143,60 @@ export default {
             defaultProps: {
                 children: 'children',
                 label: 'k_name'
-            }
+            },
+            id: ''
+        }
+    },
+    mounted () {
+        if (this.$route.query.id !== undefined) {
+            this.initData()
         }
     },
     methods: {
+        async initData () {
+            const params = {
+                id: this.$route.query.id
+            }
+            const res = await queryQuestion(params)
+            if (res.success) {
+                const data = res.data
+                this.id = data.q_id
+                this.form = {
+                    question: data.q_content,
+                    solution: data.q_answer,
+                    analysis: data.q_explain,
+                    type: data.q_type,
+                    level: data.q_level,
+                    point: data.point,
+                    course: data.course,
+                    profession: data.profession,
+                    department: data.department
+                }
+                console.log(res)
+            }
+        },
         onSave () {
             this.dialogVisible = true
         },
         async onConfirm () {
-            console.log(this.form)
-            const res = await addQuestion(this.form)
-            if (res.success) {
-                this.$message.success('添加成功！')
-                this.dialogVisible = false
-                this.$router.back(-1)
+            if (this.id === '') {
+                const res = await addQuestion(this.form)
+                if (res.success) {
+                    this.$message.success('添加成功！')
+                    this.dialogVisible = false
+                    this.$router.back(-1)
+                }
+            } else {
+                const params = {
+                    ...this.form,
+                    id: this.id
+                }
+                const res = await editQuestion(params)
+                if (res.success) {
+                    this.$message.success('编辑成功！')
+                    this.dialogVisible = false
+                    this.$router.back(-1)
+                }
             }
         },
         async onDialogOpen () {
@@ -162,6 +204,33 @@ export default {
             if (res.success) {
                 this.departmentList = res.data || []
             }
+            if (this.$route.query.id !== undefined) {
+                this.isbackData()
+            }
+        },
+        async isbackData () {
+            this.formLoading = true
+            const profession = await queryProfessionList({ depId: this.form.department })
+            if (profession.success) {
+                this.professionList = profession.data || []
+            }
+            const course = await queryCourseList({ pId: this.form.profession })
+            if (course.success) {
+                this.courseList = course.data || []
+            }
+            const params = {
+                id: this.form.course
+            }
+            const point = await queryPoints(params)
+            if (point.success) {
+                const data = point.data || []
+                this.points = formatTree(data, null, 'k_id', 'k_pid')
+                this.$nextTick(() => {
+                    const id = this.form.point + ''
+                    this.$refs.tree.setCheckedKeys([id])
+                })
+            }
+            this.formLoading = false
         },
         async onDepChange (e) {
             this.form.profession = ''

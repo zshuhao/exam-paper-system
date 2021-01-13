@@ -19,3 +19,23 @@ export function queryQuestionList (res) {
         }
     })
 }
+
+export function queryQuestion (res) {
+    return request({
+        url: '/question/ques',
+        method: 'post',
+        data: {
+            ...res
+        }
+    })
+}
+
+export function editQuestion (res) {
+    return request({
+        url: '/question/edit',
+        method: 'post',
+        data: {
+            ...res
+        }
+    })
+}

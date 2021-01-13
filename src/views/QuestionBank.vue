@@ -38,7 +38,7 @@
             </div>
             <h2  class="title">知识点</h2>
             <div class="tree">
-                <el-tree :data="pointList" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+                <el-tree :expand-on-click-node="false" :data="pointList" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
             </div>
         </div>
         <div class="list">
@@ -91,11 +91,14 @@
                 </el-pagination>
             </div>
 
-            <template v-for="item in questionList">
-                <question-item :item="item" :key="item.q_id">
-                    <el-button size="medium" type="primary" @click="onAction('edit')">编辑</el-button>
-                </question-item>
-            </template>
+            <div class="list-content" v-loading="loading">
+                <template v-for="item in questionList">
+                    <question-item :item="item" :key="item.q_id">
+                        <el-button size="medium" type="primary" @click="onAction('edit', item)">编辑</el-button>
+                    </question-item>
+                </template>
+                <div class="empty" v-if="questionList.length === 0">暂无数据</div>
+            </div>
 
             <div class="pagination">
                 <el-pagination
@@ -125,6 +128,7 @@ export default {
                 department: '',
                 profession: '',
                 course: '',
+                point: '',
                 pageNo: 1,
                 pageSize: 10
             },
@@ -152,7 +156,8 @@ export default {
                 { key: 4, name: '难' },
                 { key: 5, name: '较难' },
                 { key: 6, name: '超难' }
-            ]
+            ],
+            loading: false
         }
     },
     mounted () {
@@ -161,10 +166,13 @@ export default {
     },
     methods: {
         async initData () {
+            this.loading = true
             const res = await queryQuestionList(this.form)
             if (res.success) {
-                this.questionList = res.data || []
+                this.questionList = res.data.data || []
+                this.total = res.data.count
             }
+            this.loading = false
         },
         async getDepartment () {
             const res = await queryDepartmentList()
@@ -194,22 +202,33 @@ export default {
         onDepChange (e) {
             this.form.profession = ''
             this.form.course = ''
+            this.form.point = ''
             this.pointList = []
             this.getProfession(e)
+            this.search()
         },
         onProChange (e) {
             this.form.course = ''
+            this.form.point = ''
             this.pointList = []
             this.getCourse(e)
+            this.search()
         },
         onCourseChange (e) {
+            this.form.point = ''
             this.getPoint(e)
+            this.search()
         },
-        onAction (type) {
+        onAction (type, row) {
             if (type === 'add') {
                 this.$router.push('/questionBank/add')
             } else {
-                this.$router.push('/questionBank/edit')
+                this.$router.push({
+                    path: '/questionBank/edit',
+                    query: {
+                        id: row.q_id
+                    }
+                })
             }
         },
         onFilter (type, value) {
@@ -219,9 +238,15 @@ export default {
             if (type === 'difficulty') {
                 this.form.difficulty = value
             }
+            this.search()
         },
         handleNodeClick (e) {
-            console.log(e)
+            this.form.point = e.k_id
+            this.search()
+        },
+        search () {
+            this.form.pageNo = 1
+            this.initData()
         }
     }
 }
@@ -244,6 +269,7 @@ export default {
             padding-left: 10px;
             font-size: 14px;
             color: #666;
+            margin: 0;
         }
         .search-form {
             margin: 15px;
@@ -293,6 +319,15 @@ export default {
             justify-content: space-between;
             padding: 20px 0;
             align-items: center;
+        }
+        &-content {
+            min-height: 300px;
+            .empty {
+                text-align: center;
+                font-size: 20px;
+                line-height: 3;
+                color: #d9d9d9;
+            }
         }
         .pagination {
             padding: 20px 0;
