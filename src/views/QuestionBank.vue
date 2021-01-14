@@ -109,6 +109,15 @@
                 </el-pagination>
             </div>
         </div>
+        <el-button class="affix" round @click="onOpenSelected" type="success">已选择</el-button>
+        <el-drawer
+            class="drawer"
+            :show-close="false"
+            :visible.sync="drawer"
+        >
+            <el-input slot="title" placeholder="试卷名称"></el-input>
+            <span>我来啦!</span>
+        </el-drawer>
     </div>
 </template>
 
@@ -157,7 +166,8 @@ export default {
                 { key: 5, name: '较难' },
                 { key: 6, name: '超难' }
             ],
-            loading: false
+            loading: false,
+            drawer: false
         }
     },
     mounted () {
@@ -165,6 +175,10 @@ export default {
         this.initData()
     },
     methods: {
+        onOpenSelected () {
+            console.log(1)
+            this.drawer = true
+        },
         async initData () {
             this.loading = true
             const res = await queryQuestionList(this.form)
@@ -332,6 +346,18 @@ export default {
         .pagination {
             padding: 20px 0;
             text-align: right;
+        }
+    }
+    .affix {
+        position: fixed;
+        right: 0;
+        bottom: 30%;
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 0;
+    }
+    .drawer /deep/ .el-drawer {
+        &:focus {
+            outline: none;
         }
     }
 }

@@ -17,14 +17,14 @@
         </el-form>
         <div class="table-contianer">
             <el-table :data="tableData" border stripe>
-                <el-table-column prop="userId" label="用户编号"></el-table-column>
-                <el-table-column prop="userName" label="用户名"></el-table-column>
-                <el-table-column prop="role" label="用户角色">
+                <el-table-column prop="userId" label="编号"></el-table-column>
+                <el-table-column prop="userName" label="名称"></el-table-column>
+                <el-table-column prop="role" label="创建人">
                     <template slot-scope="scope">
                         <el-tag>{{ scope.row.role }}</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="mobile" label="手机号"></el-table-column>
+                <el-table-column prop="mobile" label="创建时间"></el-table-column>
                 <el-table-column prop="action" label="操作" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" size="mini">查看</el-button>
