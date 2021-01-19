@@ -1,6 +1,7 @@
 <template>
     <div class="question">
         <div class="q-title">
+            <span>编号：{{ item.q_id }}</span>
             <span>题型：{{ item.q_type | type }}</span>
             <span>难易度：{{ item.q_level | difficulty}}</span>
         </div>

@@ -12,7 +12,7 @@
             </el-form-item>
             <el-form-item>
                 <el-button type="primary">查询</el-button>
-                <el-button type="primary">添加</el-button>
+                <el-button type="primary" @click="onAddExam">添加</el-button>
             </el-form-item>
         </el-form>
         <div class="table-contianer">
@@ -98,6 +98,16 @@ export default {
                 role: '',
                 user: ''
             }
+        }
+    },
+    methods: {
+        onAddExam () {
+            this.$router.push({
+                path: '/questionBank',
+                query: {
+                    type: '1'
+                }
+            })
         }
     }
 }

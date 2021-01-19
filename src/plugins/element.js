@@ -34,7 +34,10 @@ import {
     RadioButton,
     Popconfirm,
     Popover,
-    Drawer
+    Drawer,
+    Divider,
+    Badge,
+    Scrollbar
 } from 'element-ui'
 
 // Vue.prototype.$ELEMENT = { size: 'small' }
@@ -72,6 +75,9 @@ Vue.use(RadioButton)
 Vue.use(Popconfirm)
 Vue.use(Popover)
 Vue.use(Drawer)
+Vue.use(Divider)
+Vue.use(Badge)
+Vue.use(Scrollbar)
 
 Vue.prototype.$msgbox = MessageBox
 Vue.prototype.$alert = MessageBox.alert

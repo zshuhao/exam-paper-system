@@ -82,7 +82,9 @@
                 </div> -->
             </div>
             <div class="action">
-                <el-button type="primary" size="medium" @click="onAction('add')">添加</el-button>
+                <div>
+                    <el-button v-if="!isCreateExam" type="primary" size="medium" @click="onAction('add')">添加</el-button>
+                </div>
                 <el-pagination
                     background
                     :current-page.sync="form.pageNo"
@@ -94,7 +96,8 @@
             <div class="list-content" v-loading="loading">
                 <template v-for="item in questionList">
                     <question-item :item="item" :key="item.q_id">
-                        <el-button size="medium" type="primary" @click="onAction('edit', item)">编辑</el-button>
+                        <el-button v-if="isCreateExam" size="medium" type="primary" @click="addExam(item)">添加</el-button>
+                        <el-button v-else size="medium" type="primary" @click="onAction('edit', item)">编辑</el-button>
                     </question-item>
                 </template>
                 <div class="empty" v-if="questionList.length === 0">暂无数据</div>
@@ -109,14 +112,23 @@
                 </el-pagination>
             </div>
         </div>
-        <el-button class="affix" round @click="onOpenSelected" type="success">已选择</el-button>
+
+        <el-badge v-if="isCreateExam" :value="examList.length" :max="50" class="affix">
+            <el-button class="btn" round @click="onOpenSelected" type="success">试题篮</el-button>
+        </el-badge>
         <el-drawer
             class="drawer"
             :show-close="false"
             :visible.sync="drawer"
         >
-            <el-input slot="title" placeholder="试卷名称"></el-input>
-            <span>我来啦!</span>
+            <el-input slot="title" v-model="examName" placeholder="试卷名称"></el-input>
+            <div class="exam-content">
+                <template v-for="(item, index) in examList">
+                    <p :key="item.q_id">{{item.q_id}} - {{item.q_type | type}}  - {{item.q_level | difficulty}}</p>
+                    <el-divider :key="item.q_id" v-if="examList.length - 1 > index"></el-divider>
+                </template>
+            </div>
+            <div class="creat-exam-btn" @click="onCreatExam">生成试卷</div>
         </el-drawer>
     </div>
 </template>
@@ -124,11 +136,33 @@
 <script>
 import QuestionItem from '../components/QuestionItem'
 import { queryDepartmentList, queryProfessionList, queryCourseList, queryPoints } from '../api/department'
-import { queryQuestionList } from '../api/question'
+import { queryQuestionList, createExam } from '../api/question'
 import { formatTree } from '../utils/tool'
+import { mapState } from 'vuex'
 export default {
     name: 'QUestionBank',
     components: { QuestionItem },
+    filters: {
+        difficulty (e) {
+            const MAP = {
+                1: '较易',
+                2: '易',
+                3: '中',
+                4: '难',
+                5: '较难',
+                6: '超难'
+            }
+            return MAP[e]
+        },
+        type (e) {
+            const MAP = {
+                1: '选择题',
+                2: '填空题',
+                3: '解答题'
+            }
+            return MAP[e]
+        }
+    },
     data () {
         return {
             form: {
@@ -167,12 +201,22 @@ export default {
                 { key: 6, name: '超难' }
             ],
             loading: false,
-            drawer: false
+            drawer: false,
+            examList: [],
+            examName: '',
+            canAddExam: true,
+            isCreateExam: false
         }
+    },
+    computed: {
+        ...mapState(['userInfo'])
     },
     mounted () {
         this.getDepartment()
         this.initData()
+        // 判断是否是创建试卷
+        console.log(this.$route.query.type)
+        this.isCreateExam = this.$route.query.type === '1'
     },
     methods: {
         onOpenSelected () {
@@ -261,6 +305,56 @@ export default {
         search () {
             this.form.pageNo = 1
             this.initData()
+        },
+        addExam (row) {
+            if (this.form.course === '') {
+                this.$message.warning('请先选择科目！')
+                return
+            }
+            if (!this.canAddExam) return
+            this.canAddExam = false
+            const res = this.examList.find(item => item.q_id === row.q_id)
+            if (res) {
+                this.$message({
+                    type: 'warning',
+                    message: '试题蓝中已经包含该题目！',
+                    duration: 2000,
+                    onClose: () => {
+                        this.canAddExam = true
+                    }
+                })
+            } else {
+                this.examList.push(row)
+                this.$message({
+                    type: 'success',
+                    message: '添加成功',
+                    duration: 2000,
+                    onClose: () => {
+                        this.canAddExam = true
+                    }
+                })
+            }
+        },
+        async onCreatExam () {
+            if (this.examName === '') {
+                this.$message.warning('请输入试卷名称！')
+                return
+            }
+            if (this.examList.length === 0) {
+                this.$message.warning('请选择试题！')
+                return
+            }
+            const parsms = {
+                name: this.examName,
+                questions: this.examList,
+                userId: this.userInfo.user_id,
+                course: this.form.course
+            }
+            // console.log(parsms)
+            const res = await createExam(parsms)
+            if (res.success) {
+                this.$router.back(-1)
+            }
         }
     }
 }
@@ -352,13 +446,44 @@ export default {
         position: fixed;
         right: 0;
         bottom: 30%;
-        border-bottom-right-radius: 0;
-        border-top-right-radius: 0;
-    }
-    .drawer /deep/ .el-drawer {
-        &:focus {
-            outline: none;
+        & /deep/ .el-badge__content {
+            right: 35px;
         }
+        .btn {
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0;
+        }
+    }
+    .drawer {
+        & /deep/ .el-drawer {
+            &:focus {
+                outline: none;
+            }
+            .el-drawer__body {
+                position: relative;
+            }
+        }
+    }
+    .exam-content {
+        padding: 0 20px;
+        position: absolute;
+        top: 0;
+        bottom: 50px;
+        right: 0;
+        left: 0;
+        overflow-y: scroll;
+    }
+    .creat-exam-btn {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        height: 50px;
+        text-align: center;
+        line-height: 50px;
+        background: #409EFF;
+        color: #fff;
+        cursor: pointer;
     }
 }
 </style>

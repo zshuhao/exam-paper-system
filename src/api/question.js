@@ -39,3 +39,13 @@ export function editQuestion (res) {
         }
     })
 }
+
+export function createExam (res) {
+    return request({
+        url: '/exam/create',
+        method: 'post',
+        data: {
+            ...res
+        }
+    })
+}
