@@ -49,3 +49,33 @@ export function createExam (res) {
         }
     })
 }
+
+export function queryExamList (res) {
+    return request({
+        url: '/exam/list',
+        method: 'post',
+        data: {
+            ...res
+        }
+    })
+}
+
+export function downExam (res) {
+    return request({
+        url: '/exam/down',
+        method: 'post',
+        data: {
+            ...res
+        }
+    })
+}
+
+export function deleteExam (res) {
+    return request({
+        url: '/exam/delete',
+        method: 'post',
+        data: {
+            ...res
+        }
+    })
+}
