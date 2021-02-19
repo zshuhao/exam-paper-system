@@ -16,8 +16,10 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.20.0",
+    "echarts": "^5.0.2",
     "element-ui": "^2.13.2",
     "vue": "^2.6.11",
+    "vue-count-to": "^1.0.13",
     "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.4.3",
     "vue-template-compiler": "^2.6.11",

@@ -16,7 +16,7 @@ export default new Router({
                     // meta: {
                     //     title: '院系管理'
                     // },
-                    component: () => import(/* webpackChunkName: "main" */ '@/views/Dashboard.vue')
+                    component: () => import(/* webpackChunkName: "main" */ '@/views/dashboard/Dashboard.vue')
                 },
                 {
                     path: '/department',
